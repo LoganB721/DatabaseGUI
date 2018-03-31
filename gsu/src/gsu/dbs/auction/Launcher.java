@@ -140,7 +140,7 @@ public class Launcher extends Application {
 		page.getChildren().add(topBarGradient);
 		
 		
-		System.out.println("Started");
+		System.out.println("Started2");
 		
 	}
 }
