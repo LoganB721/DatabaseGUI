@@ -120,7 +120,7 @@ public class Launcher extends Application {
 			
 		});
 		
-		// New Vendor Buttonn
+		// New Vendor Button
 		Button newVendorBtn = new Button("Create New Vendor");
 		newVendorBtn.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {    //every time you click button, this is what happens.
