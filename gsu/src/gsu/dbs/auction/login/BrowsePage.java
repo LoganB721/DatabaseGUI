@@ -27,6 +27,7 @@ import javafx.scene.text.FontWeight;
 
 public class BrowsePage extends Page {
 	
+	//Test
 	@Override
 	public void loadPage(Pane canvas) {
 		VBox mainPage = new VBox();
