@@ -139,6 +139,7 @@ public class Launcher extends Application {
 		topBarGradient.setStyle("-fx-background-color: linear-gradient(from 0px 0px to 0px 4px, rgba(0,0,0,0.5), rgba(0,0,0,0));");
 		page.getChildren().add(topBarGradient);
 		
+	
 	}
 }
 
