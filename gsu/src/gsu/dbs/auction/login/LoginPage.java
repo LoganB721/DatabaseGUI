@@ -82,14 +82,7 @@ public class LoginPage extends Page {
 		LoginInformation.error = false;
 		canvas.getChildren().add(mainHolder);
 		
-		Hyperlink noAccount = new Hyperlink("Don't have an account?");
-		grid.add(noAccount, 0, 4);
 		
-		noAccount.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-					Launcher.loadPage(new NewUserPage());}
-		});
 	}
 	
 }
