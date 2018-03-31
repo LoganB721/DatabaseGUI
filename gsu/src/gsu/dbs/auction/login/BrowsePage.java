@@ -68,5 +68,6 @@ public class BrowsePage extends Page {
 		pane.getChildren().add(nl);
 	}
 	
+
 }
 

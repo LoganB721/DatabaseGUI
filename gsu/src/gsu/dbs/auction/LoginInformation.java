@@ -26,7 +26,7 @@ public class LoginInformation {
 		User = username;
 		UserSalt = "TemporarySalt";
 		UserId = 1;
-		AccessLevel = 4;
+		AccessLevel = 3;
 		
 		// Tell login screen we're logged in.
 		return true;
