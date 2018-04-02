@@ -84,11 +84,11 @@ public class LoginPage extends Page {
 		
 		Hyperlink noAccount = new Hyperlink("Don't have an account?");
 		grid.add(noAccount, 0, 4);
-		
+
 		noAccount.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-					Launcher.loadPage(new NewUserPage());}
+				Launcher.loadPage(new NewUserPage());}
 		});
 	}
 	

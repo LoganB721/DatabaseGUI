@@ -104,21 +104,9 @@ public class Launcher extends Application {
 			        "Vendor"
 			    );
 		}
-		final ComboBox comboBox = new ComboBox(pageSelect);
+		final ComboBox<String> comboBox = new ComboBox<String>(pageSelect);
 		comboBox.setValue("Customer");
 		hbox.getChildren().add(comboBox);
-	
-		
-
-		// New User Button
-		Button newUserBtn = new Button("Create New User");
-		newUserBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent arg0) {
-				Launcher.loadPage(new NewUserPage());
-			}
-			
-		});
 		
 		// New Vendor Button
 		Button newVendorBtn = new Button("Create New Vendor");
@@ -127,7 +115,7 @@ public class Launcher extends Application {
 				Launcher.loadPage(new NewVendorPage());
 			}
 		});
-		hbox.getChildren().addAll(newVendorBtn, newUserBtn);
+		hbox.getChildren().add(newVendorBtn);
 		
 		
 		
