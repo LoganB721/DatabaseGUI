@@ -2,7 +2,6 @@ package gsu.dbs.auction;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
 public class TestConnection {
 	private static String SERVER 	= "jdbc:mysql://45.79.216.182";
@@ -18,7 +17,7 @@ public class TestConnection {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("Connected");
+		System.out.println("Connection successful");
 	}
 }
 
