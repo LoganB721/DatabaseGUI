@@ -18,5 +18,6 @@ public class TestConnection {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println("Connected");
 	}
 }
