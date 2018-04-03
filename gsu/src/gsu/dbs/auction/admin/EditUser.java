@@ -109,7 +109,6 @@ public class EditUser extends Page{
 				// Insert code to add to database here
 				
 			}
-			
 		});
 		
 		mainPage.getChildren().add(grid);
