@@ -41,6 +41,13 @@ public class AdminHomePage extends Page{
 		});
 		grid.add(userEdit, 0, 0);
 		
+		Hyperlink customerEdit = new Hyperlink();
+		customerEdit.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent arg0) {
+				Launcher.loadPage(new EditCustomer());
+			}
+			
+		});
 		//Back Button
 		Button back = new Button("Back to browse page");
 		HBox hbBack = new HBox(10);

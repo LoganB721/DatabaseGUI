@@ -42,14 +42,22 @@ public class EditUser extends Page{
 	    users.setEditable(true);	//Allows data to be editable;
 	    
 	    TableColumn AccountIDCol = new TableColumn("AccountID");
-        TableColumn UsernameCol = new TableColumn("Username");
-        TableColumn PasswordCol = new TableColumn("Password");
-        TableColumn DateCreatedCol = new TableColumn("Date Created");
-        TableColumn AccessLevelCol = new TableColumn("AccessLevel");
-        TableColumn EmailCol = new TableColumn("Email");
-        TableColumn AgeCol = new TableColumn("Age");
-        TableColumn LoginDateCol = new TableColumn("LoginDate");
-        
+	    AccountIDCol.setPrefWidth(100);
+	    TableColumn UsernameCol = new TableColumn("Username");
+	    UsernameCol.setPrefWidth(100);
+	    TableColumn PasswordCol = new TableColumn("Password");
+        PasswordCol.setPrefWidth(100);
+	    TableColumn DateCreatedCol = new TableColumn("Date Created");
+        DateCreatedCol.setPrefWidth(100);
+	    TableColumn AccessLevelCol = new TableColumn("AccessLevel");
+        AccessLevelCol.setPrefWidth(100);
+	    TableColumn EmailCol = new TableColumn("Email");
+        EmailCol.setPrefWidth(100);
+	    TableColumn AgeCol = new TableColumn("Age");
+        AgeCol.setPrefWidth(100);
+	    TableColumn LoginDateCol = new TableColumn("LoginDate");
+        LoginDateCol.setPrefWidth(100);
+	    
         users.getColumns().addAll(AccountIDCol, UsernameCol, PasswordCol, DateCreatedCol, AccessLevelCol, EmailCol, AgeCol, LoginDateCol);
 	
         grid.add(users, 1, 0);
@@ -82,7 +90,7 @@ public class EditUser extends Page{
         
         HBox hb = new HBox();
         hb.setPadding(new Insets(25,25,25,25));
-        hb.setSpacing(25);
+        hb.setSpacing(15);
         hb.getChildren().addAll(addAccID, addUsername, addPassword, addDateCreated, addAccessLevel, addEmail, addAge, addLoginDate);
         
         grid.add(hb, 1, 1);
