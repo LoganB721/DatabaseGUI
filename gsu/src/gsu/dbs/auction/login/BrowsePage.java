@@ -22,7 +22,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
@@ -40,35 +39,34 @@ public class BrowsePage extends Page {
 		mainPage.getChildren().add(temp);
 		
 		// Display temp item list
+		StackPane itemPane = new StackPane();
+		itemPane.setAlignment(Pos.TOP_CENTER);
+		itemPane.setMinWidth(600);
+		mainPage.getChildren().add(itemPane);
 		
-				GridPane gp = new GridPane();
-				gp.setAlignment(Pos.CENTER);
-				gp.setHgap(10);
-				gp.setVgap(10);
-				
-				for(int i=0; i<3; i++){
-					for(int j=0; j<6; j++){
-						Rectangle space = new Rectangle(100, 100);
-						
-						
-						space.setOnMouseEntered(e->{
-							space.setStroke(Color.BLACK);	
-						});
-						space.setOnMouseExited(e->{
-							space.setStroke(Color.GREY);
-						});
-						space.setOnMouseClicked(e->{
-							
-						});
-						space.setFill(Color.WHITE);
-						
-						space.setStroke(Color.GREY);
-							gp.add(space, j, i);
-					}
-				}
-				mainPage.getChildren().add(gp);
+		GridPane itemGrid = new GridPane();
+		itemGrid.setAlignment(Pos.TOP_CENTER);
+		itemGrid.setHgap(10);
+		itemGrid.setVgap(10);
+		for (int i = 1; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				loadItem(itemGrid, i, j, "TestItem" + (i + j*4));
+			}
+		}
+		
+		itemPane.getChildren().add(itemGrid);
+	}
+
+	private void loadItem(GridPane grid, int column, int row, String name) {
+		StackPane pane = new StackPane();
+		pane.setMinHeight(100);
+		pane.setMinWidth(100);
+		pane.setBackground(new Background(new BackgroundFill(Color.LIGHTSTEELBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+		grid.add(pane, column, row);
+		
+		Label nl = new Label(name);
+		pane.getChildren().add(nl);
 	}
 	
 
 }
-
