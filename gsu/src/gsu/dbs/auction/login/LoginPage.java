@@ -2,6 +2,7 @@ package gsu.dbs.auction.login;
 
 import gsu.dbs.auction.Launcher;
 import gsu.dbs.auction.LoginInformation;
+import gsu.dbs.auction.admin.AdminHomePage;
 import gsu.dbs.auction.newuser.NewUserPage;
 import gsu.dbs.auction.ui.Page;
 import javafx.event.ActionEvent;
@@ -63,16 +64,16 @@ public class LoginPage extends Page {
 			@Override
 			public void handle(ActionEvent event) {
 				if ( LoginInformation.login( userTextField.getText(), pwBox.getText() ) ) {
-					Launcher.loadPage(new BrowsePage());
+					if(userTextField.getText()=="Admin") {
+						Launcher.loadPage(new AdminHomePage());
+					}else
+						Launcher.loadPage(new BrowsePage());
 				} else {
 					LoginInformation.error = true;
 					Launcher.loadPage(new LoginPage());
 				}
 			}
 		});
-
-		mainHolder.getChildren().add(grid);
-		
 		
 		if ( LoginInformation.error ) {
 			Label message = new Label("Sorry. It looks like you've supplied an incorrect username or password.");
@@ -90,6 +91,8 @@ public class LoginPage extends Page {
 			public void handle(ActionEvent event) {
 				Launcher.loadPage(new NewUserPage());}
 		});
+	
+		mainHolder.getChildren().add(grid);
 	}
 	
 }

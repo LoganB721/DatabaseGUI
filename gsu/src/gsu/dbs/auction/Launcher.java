@@ -1,5 +1,6 @@
 package gsu.dbs.auction;
 
+import gsu.dbs.auction.admin.AdminHomePage;
 import gsu.dbs.auction.login.LoginPage;
 import gsu.dbs.auction.newuser.NewUserPage;
 import gsu.dbs.auction.newvendor.NewVendorPage;
@@ -14,6 +15,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
@@ -29,6 +31,7 @@ import javafx.stage.Stage;
 
 public class Launcher extends Application {
 	private static StackPane pane;
+	
 	
 	public void start(Stage stage) {
 		pane = new StackPane();
@@ -88,28 +91,8 @@ public class Launcher extends Application {
 		searchBar.setPrefWidth(600);
 		hbox.getChildren().add(searchBar);
 		
-		//Access Level drop down bar
-		ObservableList<String> pageSelect = FXCollections.observableArrayList("");
-		if(LoginInformation.AccessLevel >= 3) {
-		 pageSelect = 
-				    FXCollections.observableArrayList(
-				        "Customer",
-				        "Vendor",
-				        "Administrator"
-				    );
-		}else {
-			 pageSelect = 
-			    FXCollections.observableArrayList(
-			        "Customer",
-			        "Vendor"
-			    );
-		}
-		final ComboBox<String> comboBox = new ComboBox<String>(pageSelect);
-		comboBox.setValue("Customer");
-		hbox.getChildren().add(comboBox);
-		
 		// New Vendor Button
-		Button newVendorBtn = new Button("Create New Vendor");
+		Hyperlink newVendorBtn = new Hyperlink("Create New Vendor");
 		newVendorBtn.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {    //every time you click button, this is what happens.
 				Launcher.loadPage(new NewVendorPage());
@@ -117,7 +100,19 @@ public class Launcher extends Application {
 		});
 		hbox.getChildren().add(newVendorBtn);
 		
-		
+		//Admin hyperlink
+		HBox adminLink = new HBox();
+		adminLink.setAlignment(Pos.BOTTOM_RIGHT);
+		topBar.getChildren().add(adminLink);
+		Hyperlink admin = new Hyperlink("Administrator");
+		admin.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				Launcher.loadPage(new AdminHomePage());     //Ask for Administrator login to access next page?
+			}
+			
+		});
+		adminLink.getChildren().add(admin);
 		
 		// Gradient graphic
 		StackPane topBarGradient = new StackPane();
