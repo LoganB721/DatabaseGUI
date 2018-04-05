@@ -25,6 +25,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 public class NewUserPage extends Page {
 
@@ -32,15 +33,19 @@ public class NewUserPage extends Page {
 	public void loadPage(Pane canvas) {
 		VBox mainPage = new VBox();
 		mainPage.setFillWidth(true);
+		mainPage.setAlignment(Pos.CENTER);
 		canvas.getChildren().add(mainPage);
 
-		Launcher.topBar(mainPage, "User Information");
 
 		GridPane grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(15);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(25, 25, 25, 25));
+		
+		Text scenetitle = new Text("Create an Account");
+		scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+		grid.add(scenetitle, 0, 0, 2, 1);
 		
 		// Username
 		Label username = new Label("Username:");
@@ -67,32 +72,30 @@ public class NewUserPage extends Page {
 		grid.add(confirmPasswordTextField, 1, 4);
 
 		Label emailAddress = new Label("Email Address:");
-		grid.add(emailAddress, 0, 9);
+		grid.add(emailAddress, 0, 5);
 
 		final TextField emailAddressTextField = new TextField("Email Address:");
 		emailAddressTextField.setText("");
-		grid.add(emailAddressTextField, 1, 9);
+		grid.add(emailAddressTextField, 1, 5);
 
 		Label age = new Label("Date of Birth:");
-		grid.add(age, 0, 10);
+		grid.add(age, 0, 6);
 
 		final TextField ageTextField = new TextField();
-		ageTextField.setText("MM/DD/YYYY");
-		grid.add(ageTextField, 1, 10);
+		ageTextField.setPromptText("MM/DD/YYYY");
+		grid.add(ageTextField, 1, 6);
 
 		//Back Button
 		Button back = new Button("Back to Login Page");
 		HBox hbBack = new HBox(10);
 		hbBack.setAlignment(Pos.BOTTOM_LEFT);
 		hbBack.getChildren().add(back);
-		grid.add(hbBack, 0, 11);
+		grid.add(hbBack, 0, 7);
 
 		back.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-			
-					Launcher.loadPage(new LoginPage());
-			
+				Launcher.loadPage(new LoginPage());
 			}
 		});
 
@@ -101,13 +104,11 @@ public class NewUserPage extends Page {
 		HBox hbCreateUser = new HBox(10);
 		hbCreateUser.setAlignment(Pos.BOTTOM_RIGHT);
 		hbCreateUser.getChildren().add(createUser);
-		grid.add(hbCreateUser, 1, 11);
+		grid.add(hbCreateUser, 1, 7);
 		createUser.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				
-					Launcher.loadPage(new ConfirmNewUser());
-			
+				Launcher.loadPage(new ConfirmNewUser());
 			}
 		});
 

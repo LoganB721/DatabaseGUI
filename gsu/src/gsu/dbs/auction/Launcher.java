@@ -6,6 +6,7 @@ import gsu.dbs.auction.admin.AdminHomePage;
 import gsu.dbs.auction.login.LoginPage;
 import gsu.dbs.auction.newuser.NewUserPage;
 import gsu.dbs.auction.newvendor.NewVendorPage;
+import gsu.dbs.auction.sell.SellPage;
 import gsu.dbs.auction.ui.Page;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -26,6 +27,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -65,14 +67,6 @@ public class Launcher extends Application {
 		topBar.setBackground(new Background(fill));
 		page.getChildren().add(topBar);
 		
-		// Welcome text
-		StackPane tempWelcome = new StackPane();
-		tempWelcome.setAlignment(Pos.TOP_RIGHT);
-		topBar.getChildren().add(tempWelcome);
-		Label welcome = new Label("Welcome, " + LoginInformation.User);
-		welcome.setTextFill(Color.WHITESMOKE);
-		welcome.setAlignment(Pos.TOP_RIGHT);
-		tempWelcome.getChildren().add(welcome);
 		
 		// Box containing store name AND search bar
 		HBox hbox = new HBox();
@@ -93,32 +87,47 @@ public class Launcher extends Application {
 		searchBar.setPrefWidth(600);
 		hbox.getChildren().add(searchBar);
 		
-		// New Vendor Button
-		Hyperlink newVendorBtn = new Hyperlink("Create New Vendor");
-		newVendorBtn.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {    //every time you click button, this is what happens.
-			
-					Launcher.loadPage(new NewVendorPage());
-			
-			}
-		});
-		hbox.getChildren().add(newVendorBtn);
-		
-		//Admin hyperlink
-		HBox adminLink = new HBox();
-		adminLink.setAlignment(Pos.BOTTOM_RIGHT);
-		topBar.getChildren().add(adminLink);
-		Hyperlink admin = new Hyperlink("Administrator");
-		admin.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent arg0) {
+		// Box containing welcome, 
+				VBox vbox = new VBox();
+				vbox.setAlignment(Pos.CENTER_RIGHT);
+				vbox.setSpacing(1);
+				topBar.getChildren().add(vbox);
 				
-					Launcher.loadPage(new AdminHomePage());
-				    //Ask for Administrator login to access next page?
-			}
+				Label welcome = new Label("Welcome, " + LoginInformation.User);
+				welcome.setTextFill(Color.WHITESMOKE);
+				vbox.getChildren().add(welcome);
 			
-		});
-		adminLink.getChildren().add(admin);
+				Hyperlink sell = new Hyperlink("Sell an Item");
+				sell.setAlignment(Pos.CENTER);
+				sell.setOnAction(new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent event) {
+							Launcher.loadPage(new SellPage());
+					}
+				});	
+				vbox.getChildren().add(sell);
+		
+				
+				//Admin hyperlink		
+				Hyperlink admin = new Hyperlink("Administrator");
+				admin.setAlignment(Pos.CENTER);
+				admin.setOnAction(new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent arg0) {
+						Launcher.loadPage(new AdminHomePage());     //Ask for Administrator login to access next page?
+					}	
+				});
+						vbox.getChildren().add(admin);
+				
+				Hyperlink signOut = new Hyperlink("Sign Out");
+				signOut.setAlignment(Pos.CENTER);
+				signOut.setOnAction(new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent event) {
+							Launcher.loadPage(new LoginPage());
+					}
+				});	
+				vbox.getChildren().add(signOut);
 		
 		// Gradient graphic
 		StackPane topBarGradient = new StackPane();
