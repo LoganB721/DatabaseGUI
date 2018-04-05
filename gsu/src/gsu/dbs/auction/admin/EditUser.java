@@ -74,7 +74,7 @@ public class EditUser extends Page{
         LoginDateCol.setPrefWidth(100);
 	    users.getColumns().addAll(AccountIDCol, UsernameCol, PasswordCol, DateCreatedCol, AccessLevelCol, EmailCol, AgeCol, LoginDateCol);
 	
-	    users.setItems(fetchData(connect));
+	   // users.setItems(fetchData(connect));
 	    
         grid.add(users, 1, 0);
        
