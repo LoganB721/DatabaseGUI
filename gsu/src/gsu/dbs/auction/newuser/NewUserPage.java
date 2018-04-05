@@ -1,5 +1,6 @@
 package gsu.dbs.auction.newuser;
 
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -89,7 +90,9 @@ public class NewUserPage extends Page {
 		back.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				Launcher.loadPage(new LoginPage());
+			
+					Launcher.loadPage(new LoginPage());
+			
 			}
 		});
 
@@ -102,7 +105,9 @@ public class NewUserPage extends Page {
 		createUser.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				Launcher.loadPage(new ConfirmNewUser());
+				
+					Launcher.loadPage(new ConfirmNewUser());
+			
 			}
 		});
 

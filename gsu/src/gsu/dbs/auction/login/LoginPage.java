@@ -1,5 +1,7 @@
 package gsu.dbs.auction.login;
 
+import java.sql.SQLException;
+
 import gsu.dbs.auction.Launcher;
 import gsu.dbs.auction.LoginInformation;
 import gsu.dbs.auction.admin.AdminHomePage;
@@ -63,6 +65,7 @@ public class LoginPage extends Page {
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+			
 				if ( LoginInformation.login( userTextField.getText(), pwBox.getText() ) ) {
 					if(userTextField.getText()=="Admin") {
 						Launcher.loadPage(new AdminHomePage());
@@ -72,6 +75,7 @@ public class LoginPage extends Page {
 					LoginInformation.error = true;
 					Launcher.loadPage(new LoginPage());
 				}
+				
 			}
 		});
 		
@@ -89,7 +93,10 @@ public class LoginPage extends Page {
 		noAccount.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				Launcher.loadPage(new NewUserPage());}
+			
+					Launcher.loadPage(new NewUserPage());
+				
+				}
 		});
 	
 		mainHolder.getChildren().add(grid);

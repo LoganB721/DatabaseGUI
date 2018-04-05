@@ -1,5 +1,7 @@
 package gsu.dbs.auction.newvendor;
 
+import java.sql.SQLException;
+
 import gsu.dbs.auction.Launcher;
 import gsu.dbs.auction.login.BrowsePage;
 import gsu.dbs.auction.ui.Page;
@@ -51,7 +53,9 @@ public class ConfirmVendorCreation extends Page{
 		back.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				Launcher.loadPage(new BrowsePage());
+			
+					Launcher.loadPage(new BrowsePage());
+			
 			}
 		});
 		

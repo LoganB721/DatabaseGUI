@@ -1,5 +1,7 @@
 package gsu.dbs.auction;
 
+import java.sql.SQLException;
+
 import gsu.dbs.auction.admin.AdminHomePage;
 import gsu.dbs.auction.login.LoginPage;
 import gsu.dbs.auction.newuser.NewUserPage;
@@ -33,7 +35,7 @@ public class Launcher extends Application {
 	private static StackPane pane;
 	
 	
-	public void start(Stage stage) {
+	public void start(Stage stage){
 		pane = new StackPane();
 		
 		stage.setTitle("My JavaFX Application");
@@ -43,7 +45,7 @@ public class Launcher extends Application {
 		loadPage(new LoginPage());
 	}
 	
-	public static void loadPage(Page page) {
+	public static void loadPage(Page page){
 		pane.getChildren().clear();
 		page.loadPage(pane);
 	}
@@ -52,7 +54,7 @@ public class Launcher extends Application {
 		launch(args);
 	}
 
-	public static void topBar(Pane page, String newTitle) {
+	public static void topBar(Pane page, String newTitle){
 		// Top Bar
 		StackPane topBar = new StackPane();
 		topBar.setAlignment(Pos.CENTER_LEFT);
@@ -95,7 +97,9 @@ public class Launcher extends Application {
 		Hyperlink newVendorBtn = new Hyperlink("Create New Vendor");
 		newVendorBtn.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {    //every time you click button, this is what happens.
-				Launcher.loadPage(new NewVendorPage());
+			
+					Launcher.loadPage(new NewVendorPage());
+			
 			}
 		});
 		hbox.getChildren().add(newVendorBtn);
@@ -108,7 +112,9 @@ public class Launcher extends Application {
 		admin.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				Launcher.loadPage(new AdminHomePage());     //Ask for Administrator login to access next page?
+				
+					Launcher.loadPage(new AdminHomePage());
+				    //Ask for Administrator login to access next page?
 			}
 			
 		});

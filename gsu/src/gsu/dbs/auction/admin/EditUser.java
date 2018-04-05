@@ -1,9 +1,19 @@
 package gsu.dbs.auction.admin;
 
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+
 import gsu.dbs.auction.Launcher;
+import gsu.dbs.auction.TestConnection;
 import gsu.dbs.auction.login.BrowsePage;
 import gsu.dbs.auction.ui.Page;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -14,6 +24,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -22,12 +33,18 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 public class EditUser extends Page{
-
-	public void loadPage(Pane canvas) {
+	Connection connect = null;
+	
+	public void loadPage(Pane canvas)  {
+		try {
+			connect = DriverManager.getConnection("jdbc:mysql://45.79.216.182" + "/" + "AuctionDB" + "root" + "Orange!9739");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		VBox mainPage = new VBox();
 		mainPage.setFillWidth(true);
 		canvas.getChildren().add(mainPage);
-		
 		Launcher.topBar(mainPage, "Edit Users");
 		
 		GridPane grid = new GridPane();
@@ -38,9 +55,7 @@ public class EditUser extends Page{
 
 		//Create Table and columns for users
 		TableView users = new TableView();
-		
-	    users.setEditable(true);	//Allows data to be editable;
-	    
+		users.setEditable(true);	//Allows data to be editable;
 	    TableColumn AccountIDCol = new TableColumn("AccountID");
 	    AccountIDCol.setPrefWidth(100);
 	    TableColumn UsernameCol = new TableColumn("Username");
@@ -57,11 +72,12 @@ public class EditUser extends Page{
         AgeCol.setPrefWidth(100);
 	    TableColumn LoginDateCol = new TableColumn("LoginDate");
         LoginDateCol.setPrefWidth(100);
-	    
-        users.getColumns().addAll(AccountIDCol, UsernameCol, PasswordCol, DateCreatedCol, AccessLevelCol, EmailCol, AgeCol, LoginDateCol);
+	    users.getColumns().addAll(AccountIDCol, UsernameCol, PasswordCol, DateCreatedCol, AccessLevelCol, EmailCol, AgeCol, LoginDateCol);
 	
+	    users.setItems(fetchData(connect));
+	    
         grid.add(users, 1, 0);
-        
+       
         //Create Text Fields for adding new User info
         final TextField addAccID = new TextField();
         addAccID.setPromptText("AccountID");
@@ -94,7 +110,7 @@ public class EditUser extends Page{
         hb.getChildren().addAll(addAccID, addUsername, addPassword, addDateCreated, addAccessLevel, addEmail, addAge, addLoginDate);
         
         grid.add(hb, 1, 1);
-        
+
 		//Back Button
 		Button back = new Button("Back to browse page");
 		Button addUser = new Button("Add User");
@@ -107,7 +123,9 @@ public class EditUser extends Page{
 		back.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				Launcher.loadPage(new BrowsePage());
+		
+					Launcher.loadPage(new BrowsePage());
+			
 			}
 		});
 		
@@ -121,6 +139,19 @@ public class EditUser extends Page{
 		
 		mainPage.getChildren().add(grid);
 		
+	}
+	
+	public ObservableList<String> fetchData(Connection connect) throws SQLException{
+		//Row Iteration
+		ObservableList<String> data = FXCollections.observableArrayList();
+		Statement s = connect.createStatement();
+		ResultSet result = s.executeQuery("select * from User");
+		
+		while(result.next()) {
+			data.add(result.getString("AccountID"));
+		}
+		
+		return data;
 	}
 	
 }

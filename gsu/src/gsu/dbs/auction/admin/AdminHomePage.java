@@ -1,5 +1,7 @@
 package gsu.dbs.auction.admin;
 
+import java.sql.SQLException;
+
 import gsu.dbs.auction.Launcher;
 import gsu.dbs.auction.login.BrowsePage;
 import gsu.dbs.auction.ui.Page;
@@ -34,8 +36,9 @@ public class AdminHomePage extends Page{
 		Hyperlink userEdit = new Hyperlink("Edit Users");
 		userEdit.setOnAction(new EventHandler<ActionEvent>(){
 			public void handle(ActionEvent arg0) {
-				Launcher.loadPage(new EditUser());
-				
+		
+					Launcher.loadPage(new EditUser());
+			
 			}
 			
 		});
@@ -44,7 +47,9 @@ public class AdminHomePage extends Page{
 		Hyperlink customerEdit = new Hyperlink("Edit Customers");
 		customerEdit.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg0) {
-				Launcher.loadPage(new EditCustomer());
+				
+					Launcher.loadPage(new EditCustomer());
+			
 			}
 			
 		});
@@ -60,7 +65,10 @@ public class AdminHomePage extends Page{
 		back.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				Launcher.loadPage(new BrowsePage());
+			
+					Launcher.loadPage(new BrowsePage());
+			
+				
 			}
 		});
 		

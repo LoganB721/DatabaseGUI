@@ -1,5 +1,7 @@
 package gsu.dbs.auction.newuser;
 
+import java.sql.SQLException;
+
 import gsu.dbs.auction.Launcher;
 import gsu.dbs.auction.login.LoginPage;
 import gsu.dbs.auction.ui.Page;
@@ -50,7 +52,9 @@ public class ConfirmNewUser extends Page{
 		back.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				Launcher.loadPage(new LoginPage());
+				
+					Launcher.loadPage(new LoginPage());
+
 			}
 		});
 		
