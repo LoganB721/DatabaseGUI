@@ -48,7 +48,7 @@ public class EditUser extends Page{
 		mainPage.setFillWidth(true);
 		canvas.getChildren().add(mainPage);
 		
-		Launcher.topBar(mainPage, "Edit Users");
+		Launcher.topBar(mainPage, "Administrator");
 		
 		GridPane grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);
@@ -60,8 +60,9 @@ public class EditUser extends Page{
         ObservableList<String> options = 
         	    FXCollections.observableArrayList(
         	        "Edit Users",
-        	        "Option 2",
-        	        "Option 3"
+        	        "Edit Customers",
+        	        "Edit Vendors",
+        	        "Edit Products"
         	    );
         final ComboBox<String> comboBox = new ComboBox<String>(options); 
         comboBox.setValue("Edit Users");
