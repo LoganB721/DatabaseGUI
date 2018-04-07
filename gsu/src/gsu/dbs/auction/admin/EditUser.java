@@ -36,7 +36,7 @@ import javafx.scene.text.FontWeight;
 import javafx.util.Callback;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
-
+//
 public class EditUser extends Page{
 	 Connection c ;
    	 ObservableList<ObservableList> data;
