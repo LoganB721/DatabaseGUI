@@ -67,7 +67,15 @@ public class AdminHomePage extends Page{
 			@Override
 			public void handle(ActionEvent event) {
 			
-				Launcher.loadPage(new EditUser());
+				if ( LoginInformation.adminlogin( userTextField.getText(), pwBox.getText() ) ) {
+					if(userTextField.getText()=="Admin") {
+						Launcher.loadPage(new BrowsePage());
+					}else
+						Launcher.loadPage(new EditUser());
+				} else {
+					LoginInformation.error = true;
+					Launcher.loadPage(new AdminHomePage());
+				}
 				
 			}
 		});
@@ -79,8 +87,6 @@ public class AdminHomePage extends Page{
 		}
 		LoginInformation.error = false;
 		canvas.getChildren().add(mainHolder);
-		
-
 	
 		mainHolder.getChildren().add(grid);
 	}

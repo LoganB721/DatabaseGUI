@@ -21,6 +21,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -44,16 +45,30 @@ public class EditUser extends Page{
 	
 	public void loadPage(Pane canvas)  {
 		
+		
 		VBox mainPage = new VBox();
 		mainPage.setFillWidth(true);
 		canvas.getChildren().add(mainPage);
-		Launcher.topBar(mainPage, "Edit Users");
+		
+		Launcher.topBar(mainPage, "Administrator");
 		
 		GridPane grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(15);
 		grid.setVgap(10);
-		grid.setPadding(new Insets(25, 25, 25, 25));    
+		grid.setPadding(new Insets(25, 25, 25, 25));
+		
+		//Dropdown menu for admin to pick what to edit
+        ObservableList<String> options = 
+        	    FXCollections.observableArrayList(
+        	        "Edit Users",
+        	        "Edit Customers",
+        	        "Edit Vendors",
+        	        "Edit Products"
+        	    );
+        final ComboBox<String> comboBox = new ComboBox<String>(options); 
+        comboBox.setValue("Edit Users");
+        grid.add(comboBox, 0, 0);
 
 		//Create Table and columns for users
 		tv = new TableView();
@@ -84,7 +99,9 @@ public class EditUser extends Page{
         hb.getChildren().addAll(addAccID, addUsername, addPassword, addDateCreated, addAccessLevel, addEmail, addAge, addLoginDate);
         
         grid.add(hb, 1, 1);
+        
 
+        
 		//Back Button
 		Button back = new Button("Back to browse page");
 		Button addUser = new Button("Add User");

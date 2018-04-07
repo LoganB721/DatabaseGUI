@@ -67,8 +67,8 @@ public class LoginPage extends Page {
 			public void handle(ActionEvent event) {
 			
 				if ( LoginInformation.login( userTextField.getText(), pwBox.getText() ) ) {
-					if(userTextField.getText()=="Admin") {
-						Launcher.loadPage(new AdminHomePage());
+					if(userTextField.getText()=="user1") {
+						Launcher.loadPage(new BrowsePage());
 					}else
 						Launcher.loadPage(new BrowsePage());
 				} else {
