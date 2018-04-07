@@ -7,11 +7,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-
+import gsu.dbs.auction.DBConnect;
 import gsu.dbs.auction.Launcher;
 import gsu.dbs.auction.TestConnection;
 import gsu.dbs.auction.login.BrowsePage;
 import gsu.dbs.auction.ui.Page;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -31,16 +33,21 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.util.Callback;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 
 public class EditUser extends Page{
-	Connection connect = null;
+	 Connection c ;
+   	 ObservableList<ObservableList> data;
+   	 TableView tv;
 	
 	public void loadPage(Pane canvas)  {
-		try {
+	/*	try {
 			connect = DriverManager.getConnection("jdbc:mysql://45.79.216.182" + "/" + "AuctionDB" + "root" + "Orange!9739");
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
+	 }*/
 		
 		VBox mainPage = new VBox();
 		mainPage.setFillWidth(true);
@@ -54,55 +61,27 @@ public class EditUser extends Page{
 		grid.setPadding(new Insets(25, 25, 25, 25));    
 
 		//Create Table and columns for users
-		TableView users = new TableView();
-		users.setEditable(true);	//Allows data to be editable;
-	    TableColumn AccountIDCol = new TableColumn("AccountID");
-	    AccountIDCol.setPrefWidth(100);
-	    TableColumn UsernameCol = new TableColumn("Username");
-	    UsernameCol.setPrefWidth(100);
-	    TableColumn PasswordCol = new TableColumn("Password");
-        PasswordCol.setPrefWidth(100);
-	    TableColumn DateCreatedCol = new TableColumn("Date Created");
-        DateCreatedCol.setPrefWidth(100);
-	    TableColumn AccessLevelCol = new TableColumn("AccessLevel");
-        AccessLevelCol.setPrefWidth(100);
-	    TableColumn EmailCol = new TableColumn("Email");
-        EmailCol.setPrefWidth(100);
-	    TableColumn AgeCol = new TableColumn("Age");
-        AgeCol.setPrefWidth(100);
-	    TableColumn LoginDateCol = new TableColumn("LoginDate");
-        LoginDateCol.setPrefWidth(100);
-	    users.getColumns().addAll(AccountIDCol, UsernameCol, PasswordCol, DateCreatedCol, AccessLevelCol, EmailCol, AgeCol, LoginDateCol);
-	
-	   // users.setItems(fetchData(connect));
-	    
-        grid.add(users, 1, 0);
+		tv = new TableView();
+		buildData("select * from User");
+	    grid.add(tv, 1, 0);
        
         //Create Text Fields for adding new User info
         final TextField addAccID = new TextField();
         addAccID.setPromptText("AccountID");
-        addAccID.setMaxWidth(AccountIDCol.getPrefWidth());
         final TextField addUsername = new TextField();
         addUsername.setPromptText("Username");
-        addUsername.setMaxWidth(UsernameCol.getPrefWidth());
         final TextField addPassword = new TextField();
         addPassword.setPromptText("Password");
-        addPassword.setMaxWidth(PasswordCol.getPrefWidth());
         final TextField addDateCreated = new TextField();
         addDateCreated.setPromptText("Date Created");
-        addDateCreated.setMaxWidth(DateCreatedCol.getPrefWidth());
         final TextField addAccessLevel = new TextField();
         addAccessLevel.setPromptText("Access Level");
-        addAccessLevel.setMaxWidth(AccessLevelCol.getPrefWidth());
         final TextField addEmail = new TextField();
         addEmail.setPromptText("Email");
-        addEmail.setMaxWidth(EmailCol.getPrefWidth());
         final TextField addAge = new TextField();
         addAge.setPromptText("Age");
-        addAge.setMaxWidth(AgeCol.getPrefWidth());
         final TextField addLoginDate = new TextField();
         addLoginDate.setPromptText("Login Date");
-        addLoginDate.setMaxWidth(LoginDateCol.getPrefWidth());
         
         HBox hb = new HBox();
         hb.setPadding(new Insets(25,25,25,25));
@@ -141,17 +120,51 @@ public class EditUser extends Page{
 		
 	}
 	
-	public ObservableList<String> fetchData(Connection connect) throws SQLException{
-		//Row Iteration
-		ObservableList<String> data = FXCollections.observableArrayList();
-		Statement s = connect.createStatement();
-		ResultSet result = s.executeQuery("select * from User");
-		
-		while(result.next()) {
-			data.add(result.getString("AccountID"));
-		}
-		
-		return data;
-	}
+	 public void buildData(String query){
+         data = FXCollections.observableArrayList();
+         try{
+           c = DBConnect.connect();
+           //SQL FOR SELECTING ALL OF CUSTOMER
+           String SQL = query;
+           //ResultSet
+           ResultSet rs = c.createStatement().executeQuery(SQL);
+
+           //Adding Table Columms
+           for(int i=0 ; i<rs.getMetaData().getColumnCount(); i++){
+               //We are using non property style for making dynamic table
+               final int j = i;                
+               TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i+1));
+               col.setCellValueFactory(new Callback<CellDataFeatures<ObservableList,String>,ObservableValue<String>>(){                    
+                   public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param) {                                                                                              
+                       return new SimpleStringProperty(param.getValue().get(j).toString());                        
+                   }                    
+               });
+
+               tv.getColumns().addAll(col); 
+               System.out.println("Column ["+i+"] ");
+           }
+
+        
+           
+           //Add Data to ObservableList 
+           while(rs.next()){
+               //Iterate Rows
+               ObservableList<String> row = FXCollections.observableArrayList();
+               for(int i=1 ; i<=rs.getMetaData().getColumnCount(); i++){
+                   //Iterate Columns
+                   row.add(rs.getString(i));
+               }
+               System.out.println("Row [1] added "+row );
+               data.add(row);
+
+           }
+
+           //Add to tableview
+           tv.setItems(data);
+         }catch(Exception e){
+             e.printStackTrace();
+             System.out.println("Whoops... Something happened.");             
+         }
+     }
 	
 }

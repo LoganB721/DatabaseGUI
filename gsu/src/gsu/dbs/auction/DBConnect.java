@@ -16,11 +16,11 @@ public class DBConnect {
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 		}catch (InstantiationException ie) {
-				System.err.println("Whoops: " + ie.getMessage());
+				System.err.println("ie: " + ie.getMessage());
 		}catch (ClassNotFoundException cnf) {
-			System.err.println("Whoops: " + cnf.getMessage());
+			System.err.println("cnf: " + cnf.getMessage());
 		}catch (IllegalAccessException ia) {
-			System.err.println("Whoops: " + ia.getMessage());
+			System.err.println("ia: " + ia.getMessage());
 		}
 		
 		c = DriverManager.getConnection(SERVER + "/" + DATABASE, USER, PASSWORD);
