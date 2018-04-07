@@ -43,11 +43,6 @@ public class EditUser extends Page{
    	 TableView tv;
 	
 	public void loadPage(Pane canvas)  {
-	/*	try {
-			connect = DriverManager.getConnection("jdbc:mysql://45.79.216.182" + "/" + "AuctionDB" + "root" + "Orange!9739");
-		} catch (SQLException e) {
-			e.printStackTrace();
-	 }*/
 		
 		VBox mainPage = new VBox();
 		mainPage.setFillWidth(true);
@@ -124,19 +119,18 @@ public class EditUser extends Page{
          data = FXCollections.observableArrayList();
          try{
            c = DBConnect.connect();
-           //SQL FOR SELECTING ALL OF CUSTOMER
+           //Query for SQL
            String SQL = query;
-           //ResultSet
-           ResultSet rs = c.createStatement().executeQuery(SQL);
+           //Result
+           ResultSet res = c.createStatement().executeQuery(SQL);
 
-           //Adding Table Columms
-           for(int i=0 ; i<rs.getMetaData().getColumnCount(); i++){
-               //We are using non property style for making dynamic table
+           //Adds the columns to the Table
+           for(int i=0 ; i<res.getMetaData().getColumnCount(); i++){
                final int j = i;                
-               TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i+1));
+               TableColumn col = new TableColumn(res.getMetaData().getColumnName(i+1));
                col.setCellValueFactory(new Callback<CellDataFeatures<ObservableList,String>,ObservableValue<String>>(){                    
-                   public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param) {                                                                                              
-                       return new SimpleStringProperty(param.getValue().get(j).toString());                        
+                   public ObservableValue<String> call(CellDataFeatures<ObservableList, String> s) {                                                                                              
+                       return new SimpleStringProperty(s.getValue().get(j).toString());                        
                    }                    
                });
 
@@ -147,12 +141,10 @@ public class EditUser extends Page{
         
            
            //Add Data to ObservableList 
-           while(rs.next()){
-               //Iterate Rows
+           while(res.next()){
                ObservableList<String> row = FXCollections.observableArrayList();
-               for(int i=1 ; i<=rs.getMetaData().getColumnCount(); i++){
-                   //Iterate Columns
-                   row.add(rs.getString(i));
+               for(int i=1 ; i<=res.getMetaData().getColumnCount(); i++){
+                   row.add(res.getString(i));
                }
                System.out.println("Row [1] added "+row );
                data.add(row);
