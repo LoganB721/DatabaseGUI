@@ -67,13 +67,24 @@ public class EditUser extends Page{
         	        "Edit Products"
         	    );
         final ComboBox<String> comboBox = new ComboBox<String>(options); 
-        comboBox.setValue("Edit Users");
         grid.add(comboBox, 0, 0);
-
 		//Create Table and columns for users
-		tv = new TableView();
+        
+        comboBox.setOnAction((event)->{
+        String selected = comboBox.getSelectionModel().getSelectedItem();
+        
+        if(selected.contains("User")){
+        tv = new TableView();
 		buildData("select * from User");
 	    grid.add(tv, 1, 0);
+        }
+        if(selected.contains("Customers")){
+            tv = new TableView();
+    		buildData("select * from Customer");
+    	    grid.add(tv, 1, 0);
+            }    
+        });
+		
        
         //Create Text Fields for adding new User info
         final TextField addAccID = new TextField();
