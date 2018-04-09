@@ -59,14 +59,17 @@ public class EditUser extends Page{
 		grid.setPadding(new Insets(25, 25, 25, 25));
 		
 		//Dropdown menu for admin to pick what to edit
-        ObservableList<String> options = 
+		ObservableList<String> options = 
         	    FXCollections.observableArrayList(
-        	        "Edit Users",
+        	        "Edit Admins",
+        	    	"Edit Users",
         	        "Edit Customers",
         	        "Edit Vendors",
-        	        "Edit Products"
+        	        "Edit Products",
+        	        "Edit Product Type"
         	    );
         final ComboBox<String> comboBox = new ComboBox<String>(options); 
+        
         grid.add(comboBox, 0, 0);
 		//Create Table and columns for users
         
@@ -74,15 +77,41 @@ public class EditUser extends Page{
         String selected = comboBox.getSelectionModel().getSelectedItem();
         
         if(selected.contains("User")){
-        tv = new TableView();
-		buildData("select * from User");
-	    grid.add(tv, 1, 0);
-        }
+        	tv = new TableView();
+        	buildData("select * from User");
+        	grid.add(tv, 1, 0);
+        	}
+        if(selected.contains("Admins")) {
+        	tv = new TableView();
+        	buildData("select u.*"
+        			+ "from User u join Administrator a on u.AccountID = a.AdminID "
+        			+ "where u.AccessLevel >= 3 ");
+        	grid.add(tv, 1, 0);
+        	}
         if(selected.contains("Customers")){
             tv = new TableView();
-    		buildData("select * from Customer");
+    		buildData("select u.*"
+    				+ "from User u join Customer c on u.AccountID = c.CustomerID "
+    				+ "where AccessLevel >= 1 ");
     	    grid.add(tv, 1, 0);
             }    
+        if(selected.contains("Vendors")) {				//add in customer review info as well
+        	tv = new TableView();
+        	buildData("select u.* from User u join Vendor v on u.AccountID = v.VendorID "
+        			+ "where AccessLevel >= 2");
+        	grid.add(tv, 1, 0);
+        	}
+        if(selected.contains("Products")) {
+        	tv = new TableView();
+        	buildData("select * from Products");
+        	grid.add(tv, 1, 0);
+        	}
+        if(selected.contains("Edit Product Type")) {
+        	tv = new TableView();
+        	buildData("select * from Product_Type");
+        	grid.add(tv, 1, 0);
+        	}
+        
         });
 		
        
@@ -139,7 +168,7 @@ public class EditUser extends Page{
 			}
 		});
 		
-		mainPage.getChildren().add(grid);
+		mainPage.getChildren().addAll(grid);
 		
 	}
 	
@@ -174,17 +203,19 @@ public class EditUser extends Page{
                for(int i=1 ; i<=res.getMetaData().getColumnCount(); i++){
                    row.add(res.getString(i));
                }
-               System.out.println("Row [1] added "+row );
+               System.out.println("Row [1] added " + row );
                data.add(row);
 
            }
 
            //Add to tableview
            tv.setItems(data);
+         
          }catch(Exception e){
              e.printStackTrace();
              System.out.println("Whoops... Something happened.");             
          }
-     }
-	
+         
+	 }
+	 
 }
