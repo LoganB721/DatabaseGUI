@@ -1,10 +1,16 @@
 package gsu.dbs.auction.newuser;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import gsu.dbs.auction.DBConnect;
 import gsu.dbs.auction.Launcher;
+import gsu.dbs.auction.LoginInformation;
 import gsu.dbs.auction.login.LoginPage;
 import gsu.dbs.auction.ui.Page;
 import javafx.event.ActionEvent;
@@ -28,13 +34,20 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class NewUserPage extends Page {
-
+	private static String error = null;
+	
 	@Override
 	public void loadPage(Pane canvas) {
 		VBox mainPage = new VBox();
 		mainPage.setFillWidth(true);
 		mainPage.setAlignment(Pos.CENTER);
 		canvas.getChildren().add(mainPage);
+		
+		if ( NewUserPage.error != null ) {
+			Label message = new Label("Sorry, there was an error creating your account. " + error);
+			message.setTextFill(Color.RED);
+			mainPage.getChildren().add(message);
+		}
 
 
 		GridPane grid = new GridPane();
@@ -108,16 +121,78 @@ public class NewUserPage extends Page {
 		createUser.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				Launcher.loadPage(new ConfirmNewUser());
+				createUser(usernameTextField.getText(), passwordTextField.getText(), confirmPasswordTextField.getText(), emailAddressTextField.getText(), ageTextField.getText());
 			}
 		});
 
 		mainPage.getChildren().add(grid);
 		
-		// To be used later
-		final Date now = new Date();
-		final DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
-		final String date = df.format(now);
+		// Reset the error.
+		NewUserPage.error = null;
 	}
-
+	
+	private void error( String error ) {
+		NewUserPage.error = error;
+		Launcher.loadPage(new NewUserPage());
+	}
+	
+	private void createUser(String username, String password, String password2, String email, String birthdate) {
+		if ( !password.equals(password2) ) {
+			error("Password mismatch!");
+			return;
+		}
+		
+		if ( username.length() < 2 ) {
+			error("Username must be at least 2 characters!");
+			return;
+		}
+		
+		if ( password.length() < 2 ) {
+			error("Password must be at least 2 characters!");
+			return;
+		}
+		
+		if ( !email.contains("@") || !email.contains(".") || email.length() < 4 ) {
+			error("Please type a valid email!");
+			return;
+		}
+		
+		try {
+			Connection c = DBConnect.getConnection();
+			
+			PreparedStatement s = c.prepareStatement("SELECT Username FROM User WHERE Username = ?");
+			s.setString(1, username);
+			ResultSet result = s.executeQuery();
+			if ( result.isBeforeFirst() ) { // User already exists
+				error("This username is already taken!");
+				return;
+			}
+			
+			final Date now = new Date();
+			final DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+			final Date age = df.parse(birthdate);
+			final String nowDate = df.format(now);
+			final String birthDate = df.format(df.parse(birthdate));
+			
+			int userage = now.getYear()-age.getYear();
+			System.out.println(now.getYear() + " / " + age.getYear() + " / " + age + " / " + userage);
+			if ( userage < 16 ) {
+				error("You must be at least 16 to use this service!");
+				return;
+			}
+			
+			s = c.prepareStatement("INSERT INTO User(Username,Password,DateCreated,Email,Birthdate) VALUES(?,?,?,?,?)");
+			s.setString(1, username);
+			s.setString(2, password);
+			s.setString(3, nowDate);
+			s.setString(4, email);
+			s.setString(5, birthDate);
+			s.executeUpdate();
+			
+			Launcher.loadPage(new ConfirmNewUser());
+		} catch (Exception e) {
+			e.printStackTrace();
+			error("Code 1");
+		}
+	}
 }

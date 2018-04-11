@@ -27,11 +27,10 @@ public class DBConnect {
 		return c;
 	}
 
-	public static Connection getConnection() throws SQLException, ClassNotFoundException{
-		if(!c.isClosed() && c != null) {
+	public static Connection getConnection() throws SQLException{
+		if(c != null && !c.isClosed()) {
 			return c;
 		}
-		connect();
-		return c;
+		return connect();
 	}
 }
