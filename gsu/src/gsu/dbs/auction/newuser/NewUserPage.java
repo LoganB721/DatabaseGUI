@@ -168,8 +168,8 @@ public class NewUserPage extends Page {
 				return;
 			}
 			
-			final Date now = new Date();
 			final DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+			final Date now = new Date();
 			final Date age = df.parse(birthdate);
 			final String nowDate = df.format(now);
 			final String birthDate = df.format(df.parse(birthdate));

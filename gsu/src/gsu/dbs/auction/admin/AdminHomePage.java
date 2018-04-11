@@ -73,19 +73,19 @@ public class AdminHomePage extends Page{
 					}else
 						Launcher.loadPage(new EditUser());
 				} else {
-					LoginInformation.error = true;
+					LoginInformation.error = "Incorrect username/password";
 					Launcher.loadPage(new AdminHomePage());
 				}
 				
 			}
 		});
 		
-		if ( LoginInformation.error ) {
+		if ( LoginInformation.error != null ) {
 			Label message = new Label("Sorry. It looks like you've supplied an incorrect username or password.");
 			message.setTextFill(Color.RED);
 			mainHolder.getChildren().add(message);
 		}
-		LoginInformation.error = false;
+		LoginInformation.error = null;
 		canvas.getChildren().add(mainHolder);
 	
 		mainHolder.getChildren().add(grid);

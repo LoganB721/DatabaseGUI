@@ -1,7 +1,11 @@
 package gsu.dbs.auction.login;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import gsu.dbs.auction.DBConnect;
 import gsu.dbs.auction.Launcher;
 import gsu.dbs.auction.LoginInformation;
 import gsu.dbs.auction.admin.AdminHomePage;
@@ -65,26 +69,16 @@ public class LoginPage extends Page {
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-			
-				if ( LoginInformation.login( userTextField.getText(), pwBox.getText() ) ) {
-					if(userTextField.getText()=="user1") {
-						Launcher.loadPage(new BrowsePage());
-					}else
-						Launcher.loadPage(new BrowsePage());
-				} else {
-					LoginInformation.error = true;
-					Launcher.loadPage(new LoginPage());
-				}
-				
+				handleLogin( userTextField.getText(), pwBox.getText());				
 			}
 		});
 		
-		if ( LoginInformation.error ) {
-			Label message = new Label("Sorry. It looks like you've supplied an incorrect username or password.");
+		if ( LoginInformation.error != null ) {
+			Label message = new Label("Error logging in. " + LoginInformation.error);
 			message.setTextFill(Color.RED);
 			mainHolder.getChildren().add(message);
 		}
-		LoginInformation.error = false;
+		LoginInformation.error = null;
 		canvas.getChildren().add(mainHolder);
 		
 		Hyperlink noAccount = new Hyperlink("Don't have an account?");
@@ -102,4 +96,11 @@ public class LoginPage extends Page {
 		mainHolder.getChildren().add(grid);
 	}
 	
+	private void handleLogin( String username, String password ) {
+		if ( LoginInformation.login( username, password) ) {
+			Launcher.loadPage(new BrowsePage());
+		} else {
+			Launcher.loadPage(new LoginPage());
+		}
+	}
 }
