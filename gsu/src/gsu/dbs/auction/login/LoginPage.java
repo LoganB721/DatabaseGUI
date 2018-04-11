@@ -47,6 +47,7 @@ public class LoginPage extends Page {
 			
 		}
 
+		// Create GUI
 		GridPane grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(10);
