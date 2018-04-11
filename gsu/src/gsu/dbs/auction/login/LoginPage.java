@@ -1,14 +1,12 @@
 package gsu.dbs.auction.login;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.FileReader;
 
-import gsu.dbs.auction.DBConnect;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import gsu.dbs.auction.Launcher;
 import gsu.dbs.auction.LoginInformation;
-import gsu.dbs.auction.admin.AdminHomePage;
 import gsu.dbs.auction.newuser.NewUserPage;
 import gsu.dbs.auction.ui.Page;
 import javafx.event.ActionEvent;
@@ -36,6 +34,19 @@ public class LoginPage extends Page {
 		VBox mainHolder = new VBox();
 		mainHolder.setAlignment(Pos.CENTER);
 		
+		// Read login info off computer
+		String oldUsername = "";
+		String oldPassword = "";
+		try {
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(new FileReader("login.json"));
+			JSONObject jsonObject = (JSONObject) obj;
+			oldUsername = (String) jsonObject.get("username");
+			oldPassword = (String) jsonObject.get("password");
+		}catch(Exception e) {
+			
+		}
+
 		GridPane grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(10);
@@ -50,52 +61,55 @@ public class LoginPage extends Page {
 		grid.add(userName, 0, 1);
 
 		final TextField userTextField = new TextField();
-		userTextField.setText("user1");
+		userTextField.setText(oldUsername);
 		grid.add(userTextField, 1, 1);
 
 		Label pw = new Label("Password:");
 		grid.add(pw, 0, 2);
 
 		final PasswordField pwBox = new PasswordField();
-		pwBox.setText("password");
+		pwBox.setText(oldPassword);
 		grid.add(pwBox, 1, 2);
-		
+
 		Button btn = new Button("Sign in");
 		HBox hbBtn = new HBox(10);
 		hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
 		hbBtn.getChildren().add(btn);
 		grid.add(hbBtn, 1, 4);
-		
+
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				handleLogin( userTextField.getText(), pwBox.getText());				
 			}
 		});
+
+		canvas.getChildren().add(mainHolder);
+
+		Hyperlink noAccount = new Hyperlink("Don't have an account?");
+		grid.add(noAccount, 0, 4);
+
+		// Go to create account page.
+		noAccount.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				Launcher.loadPage(new NewUserPage());
+			}
+		});
+
+		mainHolder.getChildren().add(grid);
 		
+		// Display error.
 		if ( LoginInformation.error != null ) {
 			Label message = new Label("Error logging in. " + LoginInformation.error);
 			message.setTextFill(Color.RED);
 			mainHolder.getChildren().add(message);
 		}
-		LoginInformation.error = null;
-		canvas.getChildren().add(mainHolder);
 		
-		Hyperlink noAccount = new Hyperlink("Don't have an account?");
-		grid.add(noAccount, 0, 4);
-
-		noAccount.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-			
-					Launcher.loadPage(new NewUserPage());
-				
-				}
-		});
-	
-		mainHolder.getChildren().add(grid);
+		// Reset error.
+		LoginInformation.error = null;
 	}
-	
+
 	private void handleLogin( String username, String password ) {
 		if ( LoginInformation.login( username, password) ) {
 			Launcher.loadPage(new BrowsePage());

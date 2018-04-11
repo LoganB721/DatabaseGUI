@@ -1,8 +1,11 @@
 package gsu.dbs.auction;
 
+import java.io.FileWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
+import org.json.simple.JSONObject;
 
 public class LoginInformation {
 	public static String User = null;
@@ -26,6 +29,19 @@ public class LoginInformation {
 			return false;
 		}
 		
+		// Write login info to file
+        JSONObject obj = new JSONObject();
+        obj.put("username", username);
+        obj.put("password", password);
+        try {
+	        FileWriter f = new FileWriter("Login.json");
+	        f.write(obj.toJSONString());
+	        f.flush();
+        }catch(Exception e) {
+        		e.printStackTrace();
+        }
+		
+        // Test login info
 		try {
 			Connection c = DBConnect.getConnection();
 			PreparedStatement s = c.prepareStatement("SELECT Username,AccountId,AccessLevel FROM User WHERE Username = ? AND Password = ?");
