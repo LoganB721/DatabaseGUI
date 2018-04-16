@@ -4,8 +4,9 @@ import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+//Class for connecting to the server
 public class DBConnect {
-
+	
 	private static String SERVER 	= "jdbc:mysql://45.79.216.182";
 	private static String DATABASE 	= "AuctionDB";
 	private static String USER 		= "root";
