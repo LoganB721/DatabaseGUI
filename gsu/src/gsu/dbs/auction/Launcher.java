@@ -31,11 +31,15 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import sun.font.TextLabel;
 
 public class Launcher extends Application {
 	private static StackPane pane;
-	
+	private static Stage primaryStage;
 	
 	public void start(Stage stage){
 		pane = new StackPane();
@@ -136,6 +140,35 @@ public class Launcher extends Application {
 		topBarGradient.setMaxHeight(8);
 		topBarGradient.setStyle("-fx-background-color: linear-gradient(from 0px 0px to 0px 4px, rgba(0,0,0,0.5), rgba(0,0,0,0));");
 		page.getChildren().add(topBarGradient);
+	}
+	
+	public static Stage popup() {
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(primaryStage);
+        return dialog;
+	}
+	
+	public static Stage error(String message) {
+        final Stage dialog = popup();
+        VBox pane = new VBox();
+        pane.setPadding(new Insets(8,8,8,8));
+        Scene dialogScene = new Scene(pane, 300, 200);
+        dialog.setScene(dialogScene);
+        dialog.show();
+        
+        Text label = new Text(message);
+        label.setFill(Color.RED);
+        pane.getChildren().add(label);
+        
+        Button ok = new Button("Ok");
+        ok.setOnAction(event -> {
+        		dialog.close();
+        });
+        pane.getChildren().add(ok);
+        
+        
+        return dialog;
 	}
 }
 

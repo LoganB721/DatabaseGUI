@@ -16,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
@@ -26,7 +27,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 
@@ -57,102 +62,61 @@ public class EditUser extends Page{
 	
 
 		//Dropdown menu for admin to pick what to edit
-		ObservableList<String> options = 
-				FXCollections.observableArrayList(
-						"Edit Admins",
-						"Edit Users",
-						"Edit Customers",
-						"Edit Vendors",
-						"Edit Products",
-						"Edit Product Type"
-						);
+		ObservableList<String> options = FXCollections.observableArrayList(
+				"Edit Admins",
+				"Edit Users",
+				"Edit Customers",
+				"Edit Vendors",
+				"Edit Products",
+				"Edit Product Type"
+		);
 		final ComboBox<String> comboBox = new ComboBox<String>(options); 
-		final TextArea querysearch = new TextArea();
-		querysearch.setPrefColumnCount(50);
-		querysearch.setPrefRowCount(10);
-		final Button submitquery = new Button("Submit Query");
+		final Button submitquery = new Button("New Query");
 	
-		queries.getChildren().addAll(comboBox, querysearch, submitquery);
+		queries.getChildren().addAll(comboBox, submitquery);
 		submitquery.setOnAction(new EventHandler<ActionEvent> () {
 
 			@Override
 			public void handle(ActionEvent event) {
-				buildData(querysearch.getText());
-				grid.add(tv, 1, 0);
+				queryBox(grid);
 			}
-			
 		});
 		
 		
 		grid.add(queries, 0, 0);
+		
+		// Default data (EMPTY)
+		build(grid,null);
+		
 		//Create Table and columns for users
-
 		comboBox.setOnAction((event)->{
 			String selected = comboBox.getSelectionModel().getSelectedItem();
 
 			if(selected.contains("User")){
-				buildData("select * from User");
-				grid.add(tv, 1, 0);
-				grid.add(hb,1,1);
+				build(grid, "select * from User");
 			}
 			if(selected.contains("Admins")) {
-				buildData("select u.*"
+				build(grid, "select u.*"
 						+ "from User u join Administrator a on u.AccountID = a.AdminID "
 						+ "where u.AccessLevel >= 3 ");
-				grid.add(tv, 1, 0);
 			}
 			if(selected.contains("Customers")){
-				buildData("select u.*"
+				build(grid, "select u.*"
 						+ "from User u join Customer c on u.AccountID = c.CustomerID "
 						+ "where AccessLevel >= 1 ");
-				grid.add(tv, 1, 0);
 			}    
 			if(selected.contains("Vendors")) {				//add in customer review info as well
-				buildData("select u.* from User u join Vendor v on u.AccountID = v.VendorID "
+				build(grid, "select u.* from User u join Vendor v on u.AccountID = v.VendorID "
 						+ "where AccessLevel >= 2");
-				grid.add(tv, 1, 0);
 			}
 			if(selected.contains("Products")) {
-				buildData("select * from Products");
-				grid.add(tv, 1, 0);
+				build(grid, "select * from Products");
 			}
 			if(selected.contains("Edit Product Type")) {
-				buildData("select * from Product_Type");
-				grid.add(tv, 1, 0);
+				build(grid, "select * from Product_Type");
 			}
 
 		});
-
-/*
-		//Create Text Fields for adding new User info
-		final TextField addAccID = new TextField();
-		addAccID.setPromptText("AccountID");
-		final TextField addUsername = new TextField();
-		addUsername.setPromptText("Username");
-		final TextField addPassword = new TextField();
-		addPassword.setPromptText("Password");
-		final TextField addDateCreated = new TextField();
-		addDateCreated.setPromptText("Date Created");
-		final TextField addAccessLevel = new TextField();
-		addAccessLevel.setPromptText("Access Level");
-		final TextField addEmail = new TextField();
-		addEmail.setPromptText("Email");
-		final TextField addAge = new TextField();
-		addAge.setPromptText("Age");
-		final TextField addLoginDate = new TextField();
-		addLoginDate.setPromptText("Login Date");
-
-		HBox hb = new HBox();
-		hb.setPadding(new Insets(25,25,25,25));
-		hb.setSpacing(15);
-
-		hb.getChildren().addAll(addAccID, addUsername, addPassword, addDateCreated, addAccessLevel, addEmail, addAge, addLoginDate);
-
-
-
-		grid.add(hb, 1, 1);
-*/
-
 
 		//Back Button
 		Button back = new Button("Back to browse page");
@@ -163,7 +127,7 @@ public class EditUser extends Page{
 		hbBack.setAlignment(Pos.BOTTOM_CENTER);
 		hbBack.getChildren().addAll(back,addUser);
 		hbBack.setSpacing(25);
-		grid.add(hbBack, 1, 2);
+		grid.add(hbBack, 0, 3);
 
 		back.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -186,83 +150,115 @@ public class EditUser extends Page{
 		mainPage.getChildren().addAll(grid);
 
 	}
+	
+	private void queryBox(GridPane grid) {
+        final Stage dialog = Launcher.popup();
+        StackPane pane = new StackPane();
+        pane.setPadding(new Insets(8,8,8,8));
+        Scene dialogScene = new Scene(pane, 500, 200);
+        dialog.setScene(dialogScene);
+        dialog.show();
+        
+        VBox dialogVbox = new VBox(4);
+        pane.getChildren().add(dialogVbox);
+        dialogVbox.getChildren().add(new Text("Type your query below:"));
+        
+        TextArea text = new TextArea();
+        dialogVbox.getChildren().add(text);
+        
+        Button submit = new Button("Submit");
+        dialogVbox.getChildren().add(submit);
+        
+        submit.setOnAction(event -> {
+        		String SQL = text.getText();
+        		dialog.close();
+        		build(grid, SQL);
+        });
+	}
 
-	public void buildData(String query){
+	private void build(GridPane grid, String string) {
+		if ( hb != null ) {
+			hb.getChildren().clear();
+		}
+		buildData(string);
+		buildFields(tv);
+		grid.add(tv, 0, 1);
+		grid.add(hb, 0, 2);
+	}
+
+	private void buildData(String query){
 		data = FXCollections.observableArrayList();
 		tv = new TableView();
+		tv.setPrefWidth(Integer.MAX_VALUE);
 		
 		try{
-			c = DBConnect.getConnection();
-			//Query for SQL
-			String SQL = query;
-			//Result
-			ResultSet res = c.createStatement().executeQuery(SQL);
-			//Adds the columns to the Table
-			for(int i=0 ; i<res.getMetaData().getColumnCount(); i++){
-				final int j = i;                
-				TableColumn col = new TableColumn(res.getMetaData().getColumnName(i+1));
-
-				col.setCellValueFactory(new Callback<CellDataFeatures<ObservableList,String>,ObservableValue<String>>(){                    
-					public ObservableValue<String> call(CellDataFeatures<ObservableList, String> s) {
-						ObservableList cell = s.getValue();
-						Object t = cell.get(j);
-						String str = "";
-						if ( t != null ) {
-							str = t.toString();
+			if ( query != null ) {
+				c = DBConnect.getConnection();
+				//Query for SQL
+				String SQL = query;
+				//Result
+				ResultSet res = c.createStatement().executeQuery(SQL);
+				//Adds the columns to the Table
+				for(int i=0 ; i<res.getMetaData().getColumnCount(); i++){
+					final int j = i;                
+					TableColumn col = new TableColumn(res.getMetaData().getColumnName(i+1));
+	
+					col.setCellValueFactory(new Callback<CellDataFeatures<ObservableList,String>,ObservableValue<String>>(){                    
+						public ObservableValue<String> call(CellDataFeatures<ObservableList, String> s) {
+							ObservableList cell = s.getValue();
+							Object t = cell.get(j);
+							String str = "";
+							if ( t != null ) {
+								str = t.toString();
+							}
+							SimpleStringProperty prop = new SimpleStringProperty(str);
+							return prop;                        
 						}
-						SimpleStringProperty prop = new SimpleStringProperty(str);
-						return prop;                        
-					}
-				});
-
-				tv.getColumns().addAll(col); 
-				System.out.println("Column ["+i+"] ");
-			}
-
-
-
-			//Add Data to ObservableList 
-			while(res.next()){
-				ObservableList<String> row = FXCollections.observableArrayList();
-				for(int i=1 ; i<=res.getMetaData().getColumnCount(); i++){
-					row.add(res.getString(i));
+					});
+	
+					tv.getColumns().add(col); 
+					System.out.println("Column ["+i+"] ");
 				}
-				System.out.println("Row [1] added " + row );
-				data.add(row);
-
+	
+	
+	
+				//Add Data to ObservableList 
+				while(res.next()){
+					ObservableList<String> row = FXCollections.observableArrayList();
+					for(int i=1 ; i<=res.getMetaData().getColumnCount(); i++){
+						row.add(res.getString(i));
+					}
+					System.out.println("Row [1] added " + row );
+					data.add(row);
+	
+				}
 			}
 
 			//Add to tableview
 			tv.setItems(data);
 
 		}catch(Exception e){
-			e.printStackTrace();
-			System.out.println("Whoops... Something happened.");             
+			Launcher.error(e.getMessage());
+			//e.printStackTrace();
+			//System.out.println("Whoops... Something happened.");             
 		}
 
 	}
 
-	public void buildFields(String query) {
+	private void buildFields(TableView view) {
 		fieldData = FXCollections.observableArrayList();
 		hb = new HBox();
 		hb.setPadding(new Insets(25,25,25,25));
 		hb.setSpacing(15);
-		try {
-			//Query for SQL
-			String SQL = query;
-			//Result
-			ResultSet res = c.createStatement().executeQuery(SQL);
-			//Cycle Columns and create text field;
-			for(int i=0 ; i<res.getMetaData().getColumnCount(); i++){
-				TextField tf = new TextField();
-				
-				hb.getChildren().add(tf);
-			}
-	
-		} catch(Exception e){
-			e.printStackTrace();
-			System.out.println("Whoops... Something happened.");             
+		
+		ObservableList columns = view.getColumns();
+		for (int i = 0; i < columns.size(); i++) {
+			TableColumn col = (TableColumn) columns.get(i);
+			String colName = col.getText();
+			
+			final TextField field = new TextField();
+			field.setPromptText(colName);
+			hb.getChildren().add(field);
 		}
-
 	}
 }
