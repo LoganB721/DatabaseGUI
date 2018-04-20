@@ -31,10 +31,12 @@ import javafx.util.Callback;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 
 public class EditUser extends Page{
-	Connection c ;
+	Connection c;
 	ObservableList<ObservableList> data;
+	ObservableList<ObservableList> fieldData;
 	TableView tv;
-
+	HBox hb; //Text Fields
+	
 	public void loadPage(Pane canvas)  {
 
 
@@ -91,6 +93,7 @@ public class EditUser extends Page{
 			if(selected.contains("User")){
 				buildData("select * from User");
 				grid.add(tv, 1, 0);
+				grid.add(hb,1,1);
 			}
 			if(selected.contains("Admins")) {
 				buildData("select u.*"
@@ -105,25 +108,22 @@ public class EditUser extends Page{
 				grid.add(tv, 1, 0);
 			}    
 			if(selected.contains("Vendors")) {				//add in customer review info as well
-			
 				buildData("select u.* from User u join Vendor v on u.AccountID = v.VendorID "
 						+ "where AccessLevel >= 2");
 				grid.add(tv, 1, 0);
 			}
 			if(selected.contains("Products")) {
-			
 				buildData("select * from Products");
 				grid.add(tv, 1, 0);
 			}
 			if(selected.contains("Edit Product Type")) {
-				
 				buildData("select * from Product_Type");
 				grid.add(tv, 1, 0);
 			}
 
 		});
 
-
+/*
 		//Create Text Fields for adding new User info
 		final TextField addAccID = new TextField();
 		addAccID.setPromptText("AccountID");
@@ -151,7 +151,7 @@ public class EditUser extends Page{
 
 
 		grid.add(hb, 1, 1);
-
+*/
 
 
 		//Back Button
@@ -190,13 +190,13 @@ public class EditUser extends Page{
 	public void buildData(String query){
 		data = FXCollections.observableArrayList();
 		tv = new TableView();
+		
 		try{
 			c = DBConnect.getConnection();
 			//Query for SQL
 			String SQL = query;
 			//Result
 			ResultSet res = c.createStatement().executeQuery(SQL);
-
 			//Adds the columns to the Table
 			for(int i=0 ; i<res.getMetaData().getColumnCount(); i++){
 				final int j = i;                
@@ -242,5 +242,27 @@ public class EditUser extends Page{
 
 	}
 
+	public void buildFields(String query) {
+		fieldData = FXCollections.observableArrayList();
+		hb = new HBox();
+		hb.setPadding(new Insets(25,25,25,25));
+		hb.setSpacing(15);
+		try {
+			//Query for SQL
+			String SQL = query;
+			//Result
+			ResultSet res = c.createStatement().executeQuery(SQL);
+			//Cycle Columns and create text field;
+			for(int i=0 ; i<res.getMetaData().getColumnCount(); i++){
+				TextField tf = new TextField();
+				
+				hb.getChildren().add(tf);
+			}
+	
+		} catch(Exception e){
+			e.printStackTrace();
+			System.out.println("Whoops... Something happened.");             
+		}
 
+	}
 }
