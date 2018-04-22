@@ -140,19 +140,21 @@ public class EditUser extends Page{
 						+ "ON BI.BiddingItemID = P.ProductID");
 			}
 			if(selected.contains("Bid History")) {
-				build(grid, "select u.Username combo.*"
-						+ " from User u left join "
-						+ "(select BI.BidNumber, BI.CustomerID, BI.BidPrice, BI.SaleStatus,"
-						+ " p.ProductName, p.ImageURL, p.StartingPrice"
-						+ " Bid_History BI left join Products p "
-						+ "	ON BI.BiddingItemID = p.ProductID) AS c"
-						+ "	ON c.CustomerID = u.AccountID");
+				build(grid, "select bh.BidNumber, bi.StartTime, bi.EndTime, p.StartingPrice, bh.BidPrice, u.Username, "
+						+ "	p.ProductName, p.ImageURL"
+						+ " from Bid_History bh "
+						+ "	left join Products p "
+						+ "	ON p.ProductID = bh.BiddingItemID"
+						+ "	left join User u "
+						+ "	ON bh.CustomerID = u.AccountID"
+						+ "	left join Bidding_Items bi "
+						+ "	ON bi.BiddingItemID = bh.BiddingItemID");
 			}
 			if(selected.contains("Status")) {
 				build(grid, "select * from Status");
 			}
 			if(selected.contains("Sold Items")) {
-				build(grid, "select * from Sold_Items");
+				build(grid, "select * from Sold_Item");
 			}
 			if(selected.contains("Invoices")) {
 				build(grid, "select * from Invoices");
