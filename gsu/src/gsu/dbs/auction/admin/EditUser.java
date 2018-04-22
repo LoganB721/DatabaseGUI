@@ -278,7 +278,7 @@ public class EditUser extends Page{
 		}
 		buildData(string);
 		grid.add(tv, 0, 1);
-		grid.add(hb, 0, 2);
+		
 	}
 
 	private void buildData(String query){
