@@ -63,22 +63,22 @@ public class EditUser extends Page{
 
 		//Dropdown menu for admin to pick what to edit
 		ObservableList<String> options = FXCollections.observableArrayList(
-				"Edit Admins",
-				"Edit Access Levels",
-				"Edit Bidding Items",
-				"Edit Bid History",
-				"Edit Customer Reviews",
-				"Edit Customers",
-				"Edit Invoices",
-				"Edit Products",
-				"Edit Product Types",
-				"Edit Shipments",
-				"Edit Shipping Addresses",
-				"Edit Sold Items",
-				"Edit Status",
-				"Edit Stored Items",
-				"Edit Users",
-				"Edit Vendors"
+				"View Admins",
+				"View Access Levels",
+				"View Bidding Items",
+				"View Bid History",
+				"View Customer Reviews",
+				"View Customers",
+				"View Invoices",
+				"View Products",
+				"View Product Types",
+				"View Shipments",
+				"View Shipping Addresses",
+				"View Sold Items",
+				"View Status",
+				"View Stored Items",
+				"View Users",
+				"View Vendors"
 		);
 		final ComboBox<String> comboBox = new ComboBox<String>(options); 
 		final Button submitquery = new Button("New Query");
@@ -126,7 +126,7 @@ public class EditUser extends Page{
 			}
 			if(selected.contains("Products")) {
 				build(grid, "select p.ProductID, p.ProductName, v.VendorName, p.StartingPrice,"
-						+ " pt.ProductType, s.Description, p.ImageURL "
+						+ " pt.ProductType, p.ProductDesc, s.Description, p.ImageURL "
 						+ "	from Products p left join Vendor v "
 						+ "	ON p.VendorID = v.VendorID"
 						+ "	left join Product_Type pt "
@@ -216,12 +216,11 @@ public class EditUser extends Page{
 
 		//Back Button
 		Button back = new Button("Back to browse page");
-		Button addUser = new Button("Add User");
 		Hyperlink cantfind = new Hyperlink("Can't find what you're looking for?");
 		
 		HBox hbBack = new HBox();
 		hbBack.setAlignment(Pos.BOTTOM_CENTER);
-		hbBack.getChildren().addAll(back,addUser);
+		hbBack.getChildren().add(back);
 		hbBack.setSpacing(25);
 		grid.add(hbBack, 0, 3);
 
@@ -230,14 +229,6 @@ public class EditUser extends Page{
 			public void handle(ActionEvent event) {
 
 				Launcher.loadPage(new BrowsePage());
-
-			}
-		});
-
-		addUser.setOnAction(new EventHandler<ActionEvent>() {
-
-			public void handle(ActionEvent event) {
-				// Insert code to add to database here
 
 			}
 		});
@@ -277,9 +268,8 @@ public class EditUser extends Page{
 			hb.getChildren().clear();
 		}
 		buildData(string);
-		buildFields(tv);
 		grid.add(tv, 0, 1);
-		grid.add(hb, 0, 2);
+		
 	}
 
 	private void buildData(String query){
@@ -341,20 +331,4 @@ public class EditUser extends Page{
 
 	}
 
-	private void buildFields(TableView view) {
-		fieldData = FXCollections.observableArrayList();
-		hb = new HBox();
-		hb.setPadding(new Insets(25,25,25,25));
-		hb.setSpacing(15);
-		
-		ObservableList columns = view.getColumns();
-		for (int i = 0; i < columns.size(); i++) {
-			TableColumn col = (TableColumn) columns.get(i);
-			String colName = col.getText();
-			
-			final TextField field = new TextField();
-			field.setPromptText(colName);
-			hb.getChildren().add(field);
-		}
-	}
 }
