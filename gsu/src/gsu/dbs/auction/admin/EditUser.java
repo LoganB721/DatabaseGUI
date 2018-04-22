@@ -277,7 +277,6 @@ public class EditUser extends Page{
 			hb.getChildren().clear();
 		}
 		buildData(string);
-		buildFields(tv);
 		grid.add(tv, 0, 1);
 		grid.add(hb, 0, 2);
 	}
