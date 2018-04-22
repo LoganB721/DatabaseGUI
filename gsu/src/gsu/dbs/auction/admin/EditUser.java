@@ -341,20 +341,4 @@ public class EditUser extends Page{
 
 	}
 
-	private void buildFields(TableView view) {
-		fieldData = FXCollections.observableArrayList();
-		hb = new HBox();
-		hb.setPadding(new Insets(25,25,25,25));
-		hb.setSpacing(15);
-		
-		ObservableList columns = view.getColumns();
-		for (int i = 0; i < columns.size(); i++) {
-			TableColumn col = (TableColumn) columns.get(i);
-			String colName = col.getText();
-			
-			final TextField field = new TextField();
-			field.setPromptText(colName);
-			hb.getChildren().add(field);
-		}
-	}
 }
