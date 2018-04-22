@@ -63,22 +63,22 @@ public class EditUser extends Page{
 
 		//Dropdown menu for admin to pick what to edit
 		ObservableList<String> options = FXCollections.observableArrayList(
-				"Edit Admins",
-				"Edit Access Levels",
-				"Edit Bidding Items",
-				"Edit Bid History",
-				"Edit Customer Reviews",
-				"Edit Customers",
-				"Edit Invoices",
-				"Edit Products",
-				"Edit Product Types",
-				"Edit Shipments",
-				"Edit Shipping Addresses",
-				"Edit Sold Items",
-				"Edit Status",
-				"Edit Stored Items",
-				"Edit Users",
-				"Edit Vendors"
+				"View Admins",
+				"View Access Levels",
+				"View Bidding Items",
+				"View Bid History",
+				"View Customer Reviews",
+				"View Customers",
+				"View Invoices",
+				"View Products",
+				"View Product Types",
+				"View Shipments",
+				"View Shipping Addresses",
+				"View Sold Items",
+				"View Status",
+				"View Stored Items",
+				"View Users",
+				"View Vendors"
 		);
 		final ComboBox<String> comboBox = new ComboBox<String>(options); 
 		final Button submitquery = new Button("New Query");
