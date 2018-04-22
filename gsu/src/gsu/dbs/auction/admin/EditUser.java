@@ -74,7 +74,6 @@ public class EditUser extends Page{
 				"Edit Product Types",
 				"Edit Shipments",
 				"Edit Shipping Addresses",
-				"Edit Shipping Companies",
 				"Edit Sold Items",
 				"Edit Status",
 				"Edit Stored Items",
@@ -134,6 +133,7 @@ public class EditUser extends Page{
 						+ "	ON p.ProductTypeID = pt.ProductTypeID"
 						+ "	left join Status s "
 						+ " ON p.ProductStatus = s.StatusID");
+			}
 			if(selected.contains("Product Type")) {
 				build(grid, "select * from Product_Type");
 			}
@@ -216,7 +216,6 @@ public class EditUser extends Page{
 
 		//Back Button
 		Button back = new Button("Back to browse page");
-		Button addUser = new Button("Add User");
 		Hyperlink cantfind = new Hyperlink("Can't find what you're looking for?");
 		
 		HBox hbBack = new HBox();
@@ -230,14 +229,6 @@ public class EditUser extends Page{
 			public void handle(ActionEvent event) {
 
 				Launcher.loadPage(new BrowsePage());
-
-			}
-		});
-
-		addUser.setOnAction(new EventHandler<ActionEvent>() {
-
-			public void handle(ActionEvent event) {
-				// Insert code to add to database here
 
 			}
 		});
