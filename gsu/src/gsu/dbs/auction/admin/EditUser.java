@@ -74,6 +74,7 @@ public class EditUser extends Page{
 				"Edit Product Types",
 				"Edit Shipments",
 				"Edit Shipping Addresses",
+				"Edit Shipping Companies",
 				"Edit Sold Items",
 				"Edit Status",
 				"Edit Stored Items",
