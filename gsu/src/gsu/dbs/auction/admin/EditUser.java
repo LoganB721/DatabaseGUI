@@ -64,11 +64,21 @@ public class EditUser extends Page{
 		//Dropdown menu for admin to pick what to edit
 		ObservableList<String> options = FXCollections.observableArrayList(
 				"Edit Admins",
-				"Edit Users",
+				"Edit Access Levels",
+				"Edit Bidding Items",
+				"Edit Bid History",
+				"Edit Customer Reviews",
 				"Edit Customers",
-				"Edit Vendors",
+				"Edit Invoices",
 				"Edit Products",
-				"Edit Product Type"
+				"Edit Product Types",
+				"Edit Shipments",
+				"Edit Shipping Addresses",
+				"Edit Sold Items",
+				"Edit Status",
+				"Edit Stored Items",
+				"Edit Users",
+				"Edit Vendors"
 		);
 		final ComboBox<String> comboBox = new ComboBox<String>(options); 
 		final Button submitquery = new Button("New Query");
@@ -112,10 +122,50 @@ public class EditUser extends Page{
 			if(selected.contains("Products")) {
 				build(grid, "select * from Products");
 			}
-			if(selected.contains("Edit Product Type")) {
+			if(selected.contains("Product Type")) {
 				build(grid, "select * from Product_Type");
 			}
-
+			if(selected.contains("Access Level")) {
+				build(grid,"select * from Access_Level");
+			}
+			if(selected.contains("Customer Reviews")) {
+				build(grid,"select * from Customer_Review");
+			}
+			if(selected.contains("Stored Items")) {
+				build(grid, "select * from Stored_Items");
+			}
+			if(selected.contains("Bidding Items")) {
+				build(grid, "select BI.*, P.ProductName, P.ImageURL "
+						+ "	from Bidding_Items BI left join Products P "
+						+ "ON BI.BiddingItemID = P.ProductID");
+			}
+			if(selected.contains("Bid History")) {
+				build(grid, "select u.Username combo.*"
+						+ " from User u left join "
+						+ "(select BI.BidNumber, BI.CustomerID, BI.BidPrice, BI.SaleStatus,"
+						+ " p.ProductName, p.ImageURL, p.StartingPrice"
+						+ " Bid_History BI left join Products p "
+						+ "	ON BI.BiddingItemID = p.ProductID) AS c"
+						+ "	ON c.CustomerID = u.AccountID");
+			}
+			if(selected.contains("Status")) {
+				build(grid, "select * from Status");
+			}
+			if(selected.contains("Sold Items")) {
+				build(grid, "select * from Sold_Items");
+			}
+			if(selected.contains("Invoices")) {
+				build(grid, "select * from Invoices");
+			}
+			if(selected.contains("Shipments")) {
+				build(grid, "select * from Shipment");
+			}
+			if(selected.contains("Shipping Addresses")) {
+				build(grid, "select * from Shipping_Address");
+			}
+			if(selected.contains("Shipping Companies")) {
+				build(grid, "select * from Shipping_Company");
+			}
 		});
 
 		//Back Button
