@@ -98,29 +98,41 @@ public class EditUser extends Page{
 		// Default data (EMPTY)
 		build(grid,null);
 		
-		//Create Table and columns for users
+		//Create Table and columns for views
 		comboBox.setOnAction((event)->{
 			String selected = comboBox.getSelectionModel().getSelectedItem();
 
 			if(selected.contains("User")){
-				build(grid, "select * from User");
+				build(grid, "select u.AccountID, u.Username, u.Password, u.DateCreated, "
+						+ "	u.Email, u.BirthDate, u.LoginDate, u.AccessLevel, al.Title"
+						+ " from User u left join Access_Level al"
+						+ "	ON u.AccessLevel = al.AccessLevel");
 			}
 			if(selected.contains("Admins")) {
 				build(grid, "select u.*"
 						+ "from User u join Administrator a on u.AccountID = a.AdminID "
-						+ "where u.AccessLevel >= 3 ");
+						+ "where u.AccessLevel = 4 ");
 			}
 			if(selected.contains("Customers")){
 				build(grid, "select u.*"
 						+ "from User u join Customer c on u.AccountID = c.CustomerID "
-						+ "where AccessLevel >= 1 ");
+						+ "where AccessLevel >= 2 ");
 			}    
 			if(selected.contains("Vendors")) {				//add in customer review info as well
-				build(grid, "select u.* from User u join Vendor v on u.AccountID = v.VendorID "
-						+ "where AccessLevel >= 2");
+				build(grid, "select v.*, u.Username, u.Email, u.AccessLevel"
+						+ " from Vendor v left join User u "
+						+ " ON v.VendorID = u.AccountID "
+						+ " where AccessLevel >= 3");
 			}
 			if(selected.contains("Products")) {
-				build(grid, "select * from Products");
+				build(grid, "select p.ProductID, p.ProductName, v.VendorName, p.StartingPrice,"
+						+ " pt.ProductType, s.Description, p.ImageURL "
+						+ "	from Products p left join Vendor v "
+						+ "	ON p.VendorID = v.VendorID"
+						+ "	left join Product_Type pt "
+						+ "	ON p.ProductTypeID = pt.ProductTypeID"
+						+ "	left join Status s "
+						+ " ON p.ProductStatus = s.StatusID");
 			}
 			if(selected.contains("Product Type")) {
 				build(grid, "select * from Product_Type");
@@ -129,19 +141,29 @@ public class EditUser extends Page{
 				build(grid,"select * from Access_Level");
 			}
 			if(selected.contains("Customer Reviews")) {
-				build(grid,"select * from Customer_Review");
+				build(grid,"select cr.CustomerID, u.Username, cr.VendorID, v.VendorName, "
+						+ "	cr.Rating, cr.Comment"
+						+ " from Customer_Review cr left Join User u "
+						+ "	ON cr.CustomerID = u.AccountID "
+						+ "	left Join Vendor v "
+						+ "	ON cr.VendorID = v.VendorID");
 			}
 			if(selected.contains("Stored Items")) {
-				build(grid, "select * from Stored_Items");
+				build(grid, "select si.StorageID, p.ProductName, si.Location,"
+						+ "	p.ImageURL "
+						+ " from Stored_Items si left join Products p"
+						+ "	ON si.StorageID = p.ProductID");
 			}
 			if(selected.contains("Bidding Items")) {
-				build(grid, "select BI.*, P.ProductName, P.ImageURL "
-						+ "	from Bidding_Items BI left join Products P "
-						+ "ON BI.BiddingItemID = P.ProductID");
+				build(grid, "select bi.BiddingItemID, p.ProductName, bi.StartTime,"
+						+ "	bi.EndTime, p.ImageURL "
+						+ "	from Bidding_Items bi left join Products p "
+						+ "ON bi.BiddingItemID = p.ProductID");
 			}
 			if(selected.contains("Bid History")) {
-				build(grid, "select bh.BidNumber, bi.StartTime, bi.EndTime, p.StartingPrice, bh.BidPrice, u.Username, "
-						+ "	p.ProductName, p.ImageURL"
+				build(grid, "select bh.BidNumber, u.AccountId, u.Username, bi.BiddingItemID, p.ProductName, "
+						+ "	bi.StartTime, bi.EndTime, p.StartingPrice, bh.BidPrice, "
+						+ "	p.ImageURL"
 						+ " from Bid_History bh "
 						+ "	left join Products p "
 						+ "	ON p.ProductID = bh.BiddingItemID"
@@ -154,19 +176,41 @@ public class EditUser extends Page{
 				build(grid, "select * from Status");
 			}
 			if(selected.contains("Sold Items")) {
-				build(grid, "select * from Sold_Item");
+				build(grid, "select si.CustomerID, u.Username, si.SoldItemID, p.ProductName,"
+						+ "	si.BidNumber, si.FinalBidPrice "
+						+ "	from Sold_Item si left join User u"
+						+ "	ON u.AccountID = si.CustomerID"
+						+ "	left join Products p "
+						+ "	ON si.SoldItemID = p.ProductID");
 			}
 			if(selected.contains("Invoices")) {
-				build(grid, "select * from Invoices");
+				build(grid, "select i.InvoiceID, i.CustomerID, u.Username, i.SoldItemID,"
+						+ "	p.ProductName, i.BidNumber, i.InvoiceDate, i.InvoiceTotal,"
+						+ "	i.InvoiceDueDate, i.PaymentDate"
+						+ " from Invoice i left join User u "
+						+ "	ON i.CustomerID = u.AccountID"
+						+ "	left join Products p "
+						+ " ON i.SoldItemID = p.ProductID");
 			}
 			if(selected.contains("Shipments")) {
-				build(grid, "select * from Shipment");
+				build(grid, "select s.ShipmentID, s.InvoiceID, s.ShippingAddressID, sa.Address, sa.City, sa.State, sa.zip,"
+						+ " sc.CompanyName, s.ShipDate, ss.Description "
+						+ "	from Shipment s left join Shipping_Address sa"
+						+ "	ON s.ShippingAddressID = sa.ShippingAddressID"
+						+ "	left join Shipping_Company sc "
+						+ "	ON s.ShippingCompanyID = sc.ShippingCompanyID"
+						+ "	left join Status ss "
+						+ "	ON s.ShipStatus = ss.StatusID");
 			}
 			if(selected.contains("Shipping Addresses")) {
-				build(grid, "select * from Shipping_Address");
+				build(grid, "select sa.ShippingAddressID, u.Username, sa.Address,"
+						+ "	sa.Address2, sa.City, sa.State, sa.ZIP "
+						+ "	from Shipping_Address sa left join User u"
+						+ "	ON sa.CustomerID = u.AccountID ");
 			}
 			if(selected.contains("Shipping Companies")) {
-				build(grid, "select * from Shipping_Company");
+				build(grid, "select * "
+						+ "from Shipping_Company");
 			}
 		});
 
