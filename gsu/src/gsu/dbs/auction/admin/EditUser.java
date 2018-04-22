@@ -127,14 +127,13 @@ public class EditUser extends Page{
 			}
 			if(selected.contains("Products")) {
 				build(grid, "select p.ProductID, p.ProductName, v.VendorName, p.StartingPrice,"
-						+ " pt.ProductType, s.Description, p.ImageURL "
+						+ " pt.ProductType, p.ProductDesc, s.Description, p.ImageURL "
 						+ "	from Products p left join Vendor v "
 						+ "	ON p.VendorID = v.VendorID"
 						+ "	left join Product_Type pt "
 						+ "	ON p.ProductTypeID = pt.ProductTypeID"
 						+ "	left join Status s "
 						+ " ON p.ProductStatus = s.StatusID");
-			}
 			if(selected.contains("Product Type")) {
 				build(grid, "select * from Product_Type");
 			}
