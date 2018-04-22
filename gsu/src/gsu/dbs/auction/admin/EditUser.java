@@ -220,7 +220,7 @@ public class EditUser extends Page{
 		
 		HBox hbBack = new HBox();
 		hbBack.setAlignment(Pos.BOTTOM_CENTER);
-		hbBack.getChildren().addAll(back,addUser);
+		hbBack.getChildren().add(back);
 		hbBack.setSpacing(25);
 		grid.add(hbBack, 0, 3);
 
