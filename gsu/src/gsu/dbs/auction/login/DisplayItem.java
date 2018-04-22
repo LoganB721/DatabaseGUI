@@ -2,6 +2,7 @@ package gsu.dbs.auction.login;
 
 import gsu.dbs.auction.Launcher;
 import gsu.dbs.auction.ui.Page;
+import gsu.dbs.auction.wrapper.BiddingItem;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
@@ -9,6 +10,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 public class DisplayItem extends Page {
+	private BiddingItem b;
+	
+	public DisplayItem(BiddingItem object) {
+	}
 
 	@Override
 	public void loadPage(Pane canvas) {	
