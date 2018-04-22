@@ -31,6 +31,10 @@ public class Product {
 		return this.productID;
 	}
 	
+	public int getProductTypeID() {
+		return this.productTypeID;
+	}
+	
 	public int getVendorID() {
 		return this.vendorID;
 	}

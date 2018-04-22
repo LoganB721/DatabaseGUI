@@ -13,6 +13,7 @@ public class DisplayItem extends Page {
 	private BiddingItem b;
 	
 	public DisplayItem(BiddingItem object) {
+		this.b = object;
 	}
 
 	@Override

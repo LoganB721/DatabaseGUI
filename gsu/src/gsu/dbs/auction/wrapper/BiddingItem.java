@@ -29,15 +29,13 @@ public class BiddingItem {
 	}
 	
 	private static BiddingItem[] getItems(boolean onSale) {
-		String SQL = "SELECT bi.*,ProductName,ImageURL FROM Bidding_Items bi JOIN Products p ON bi.BiddingItemID = p.ProductID WHERE bi.SaleStatus = "+(onSale?0:1)+";";
+		String SQL = "SELECT bi.* FROM Bidding_Items bi JOIN Products p ON bi.BiddingItemID = p.ProductID WHERE bi.SaleStatus = "+(onSale?0:1)+";";
 		try {
 			Connection c = DBConnect.getConnection();
 			ResultSet result = c.createStatement().executeQuery(SQL);
 			ArrayList<BiddingItem> temp = new ArrayList<BiddingItem>();
 			while(result.next()) {
 				int productID = result.getInt(1);
-				String productName = result.getString(5);
-				String imageURL = result.getString(6);
 				Date startTime = result.getDate(2);
 				Date endTime = result.getDate(3);
 				BiddingItem o = new BiddingItem(Product.getProductFromID(productID), startTime, endTime);
