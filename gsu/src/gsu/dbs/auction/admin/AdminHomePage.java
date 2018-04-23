@@ -71,7 +71,7 @@ public class AdminHomePage extends Page{
 					if(userTextField.getText()=="Admin") {
 						Launcher.loadPage(new BrowsePage());
 					}else
-						Launcher.loadPage(new EditUser());
+						Launcher.loadPage(new AdminPanel());
 				} else {
 					LoginInformation.error = "Incorrect username/password";
 					Launcher.loadPage(new AdminHomePage());

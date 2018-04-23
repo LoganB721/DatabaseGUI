@@ -35,7 +35,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 
-public class EditUser extends Page{
+public class AdminPanel extends Page{
 	Connection c;
 	ObservableList<ObservableList> data;
 	ObservableList<ObservableList> fieldData;
@@ -81,14 +81,26 @@ public class EditUser extends Page{
 				"View Vendors"
 		);
 		final ComboBox<String> comboBox = new ComboBox<String>(options); 
+
+
 		final Button submitquery = new Button("New Query");
-	
 		queries.getChildren().addAll(comboBox, submitquery);
 		submitquery.setOnAction(new EventHandler<ActionEvent> () {
 
 			@Override
 			public void handle(ActionEvent event) {
 				queryBox(grid);
+			}
+		});
+		
+		
+		final Button submitcommand = new Button("New Command");
+		queries.getChildren().add(submitcommand);
+		submitcommand.setOnAction(new EventHandler<ActionEvent> () {
+
+			@Override
+			public void handle(ActionEvent event) {
+				commandBox(grid);
 			}
 		});
 		
@@ -258,8 +270,36 @@ public class EditUser extends Page{
         
         submit.setOnAction(event -> {
         		String SQL = text.getText();
-        		dialog.close();
         		build(grid, SQL);
+        });
+	}
+	
+	private void commandBox(GridPane grid) {
+        final Stage dialog = Launcher.popup();
+        StackPane pane = new StackPane();
+        pane.setPadding(new Insets(8,8,8,8));
+        Scene dialogScene = new Scene(pane, 500, 200);
+        dialog.setScene(dialogScene);
+        dialog.show();
+        
+        VBox dialogVbox = new VBox(4);
+        pane.getChildren().add(dialogVbox);
+        dialogVbox.getChildren().add(new Text("Type your command (INSERT/UPDATE/DELETE) below:"));
+        
+        TextArea text = new TextArea();
+        dialogVbox.getChildren().add(text);
+        
+        Button submit = new Button("Submit");
+        dialogVbox.getChildren().add(submit);
+        
+        submit.setOnAction(event -> {
+	        	try {
+	        		Connection c = DBConnect.getConnection();
+	        		c.createStatement().execute(text.getText());
+	        		Launcher.error("Command successful");
+	        	} catch(Exception e) {
+	        		Launcher.error(e.getMessage());
+	        	}
         });
 	}
 
