@@ -82,9 +82,12 @@ public class AdminPanel extends Page{
 		);
 		final ComboBox<String> comboBox = new ComboBox<String>(options); 
 
-
+		HBox sqlButton = new HBox();
+		sqlButton.setSpacing(8);
+		queries.getChildren().addAll(comboBox, sqlButton);
+		
 		final Button submitquery = new Button("New Query");
-		queries.getChildren().addAll(comboBox, submitquery);
+		sqlButton.getChildren().add(submitquery);
 		submitquery.setOnAction(new EventHandler<ActionEvent> () {
 
 			@Override
@@ -95,7 +98,7 @@ public class AdminPanel extends Page{
 		
 		
 		final Button submitcommand = new Button("New Command");
-		queries.getChildren().add(submitcommand);
+		sqlButton.getChildren().add(submitcommand);
 		submitcommand.setOnAction(new EventHandler<ActionEvent> () {
 
 			@Override
