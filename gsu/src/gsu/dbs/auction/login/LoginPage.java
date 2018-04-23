@@ -113,7 +113,7 @@ public class LoginPage extends Page {
 
 	private void handleLogin( String username, String password ) {
 		if ( LoginInformation.login( username, password) ) {
-			Launcher.loadPage(new BrowsePage());
+			Launcher.loadPage(new BrowsePage(null));
 		} else {
 			Launcher.loadPage(new LoginPage());
 		}

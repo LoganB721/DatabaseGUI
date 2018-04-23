@@ -47,7 +47,7 @@ public class DisplayItem extends Page {
 		Hyperlink back = new Hyperlink("Back");
 		mainPage.getChildren().add(back);
 		back.setOnAction(event -> {
-			Launcher.loadPage(new BrowsePage());
+			Launcher.loadPage(new BrowsePage(BrowsePage.search));
 		});
 		
 		// Create divider
@@ -60,6 +60,7 @@ public class DisplayItem extends Page {
 		sp.setMinWidth(150);
 		sp.setMaxWidth(sp.getMinWidth());
 		divider.getChildren().add(sp);
+		
 		
 		Platform.runLater(() -> {
 			StackPane t = new StackPane();

@@ -3,6 +3,7 @@ package gsu.dbs.auction;
 import java.sql.SQLException;
 
 import gsu.dbs.auction.admin.AdminHomePage;
+import gsu.dbs.auction.login.BrowsePage;
 import gsu.dbs.auction.login.LoginPage;
 import gsu.dbs.auction.newuser.NewUserPage;
 import gsu.dbs.auction.newvendor.NewVendorPage;
@@ -94,12 +95,16 @@ public class Launcher extends Application {
 		searchBar.setMaxWidth(600);
 		searchBar.setPrefWidth(600);
 		hbox.getChildren().add(searchBar);
+		
+		if ( BrowsePage.search != null ) {
+			searchBar.setText(BrowsePage.search);
+		}
 
 		searchBar.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent ke) {
 				if (ke.getCode().equals(KeyCode.ENTER)) {
-					
+					Launcher.loadPage(new BrowsePage(searchBar.getText()));
 				}
 			}
 		});

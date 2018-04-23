@@ -69,7 +69,7 @@ public class AdminHomePage extends Page{
 			
 				if ( LoginInformation.adminlogin( userTextField.getText(), pwBox.getText() ) ) {
 					if(userTextField.getText()=="Admin") {
-						Launcher.loadPage(new BrowsePage());
+						Launcher.loadPage(new BrowsePage(null));
 					}else
 						Launcher.loadPage(new AdminPanel());
 				} else {

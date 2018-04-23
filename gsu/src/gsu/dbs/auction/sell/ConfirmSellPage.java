@@ -45,7 +45,7 @@ public class ConfirmSellPage extends Page {
 			@Override
 			public void handle(ActionEvent event) {
 			
-					Launcher.loadPage(new BrowsePage());
+					Launcher.loadPage(new BrowsePage(null));
 			
 			}
 		});

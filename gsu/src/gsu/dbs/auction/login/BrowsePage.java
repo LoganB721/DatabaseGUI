@@ -19,7 +19,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 public class BrowsePage extends Page {
-
+	public static String search = null;
+	
+	public BrowsePage(String search) {
+		BrowsePage.search = search;
+	}
+	
 	@Override
 	public void loadPage(Pane canvas) {
 		VBox mainPage = new VBox();
@@ -44,7 +49,10 @@ public class BrowsePage extends Page {
 		itemGrid.setHgap(10);
 		itemGrid.setVgap(10);
 		for (int i = 0; i < objects.length; i++) {
-			loadItem(itemGrid, i, 0, objects[i]);
+			BiddingItem b = objects[i];
+			if ( search == null || b.getProduct().getProductName().contains(search) || b.getProduct().getProductDescription().contains(search) ) {
+				loadItem(itemGrid, i, 0, objects[i]);
+			}
 		}
 		
 		itemPane.getChildren().add(itemGrid);
