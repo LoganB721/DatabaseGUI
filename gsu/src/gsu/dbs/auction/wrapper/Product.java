@@ -75,4 +75,8 @@ public class Product {
 		
 		return null;
 	}
+
+	public String getProductDescription() {
+		return this.productDescription;
+	}
 }

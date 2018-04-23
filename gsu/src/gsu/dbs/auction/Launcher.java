@@ -153,12 +153,13 @@ public class Launcher extends Application {
         final Stage dialog = popup();
         VBox pane = new VBox();
         pane.setPadding(new Insets(8,8,8,8));
-        Scene dialogScene = new Scene(pane, 300, 200);
+        Scene dialogScene = new Scene(pane, 300, 140);
         dialog.setScene(dialogScene);
         dialog.show();
         
         Text label = new Text(message);
         label.setFill(Color.RED);
+        label.setWrappingWidth(300);
         pane.getChildren().add(label);
         
         Button ok = new Button("Ok");
