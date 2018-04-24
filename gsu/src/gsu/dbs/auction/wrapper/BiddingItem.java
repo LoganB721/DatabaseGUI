@@ -47,7 +47,7 @@ public class BiddingItem {
 	}
 	
 	private static BiddingItem[] getItems(boolean onSale) {
-		String SQL = "SELECT bi.* FROM Bidding_Items bi JOIN Products p ON bi.BiddingItemID = p.ProductID WHERE bi.SaleStatus = "+(onSale?0:1)+";";
+		String SQL = "SELECT bi.* FROM Bidding_Items bi JOIN Products p ON bi.BiddingItemID = p.ProductID;";
 		try {
 			Connection c = DBConnect.getConnection();
 			ResultSet result = c.createStatement().executeQuery(SQL);
