@@ -14,6 +14,7 @@ public class LoginInformation {
 	public static int AccessLevel = 0;
 
 	public static String error;
+	private static int vendorId = -1;
 
 	/**
 	 * This is a blocking action that will check your login information.
@@ -84,6 +85,24 @@ public class LoginInformation {
 
 		// Tell login screen we're logged in.
 		return true;
+	}
+
+	public static int getVendorID() {
+		if ( vendorId == -1 ) {
+			String SQL = "SELECT * FROM Vendor WHERE VendorID=" + UserId;
+			try {
+				Connection c = DBConnect.getConnection();
+				ResultSet r = c.createStatement().executeQuery(SQL);
+				if ( r.isBeforeFirst() && r.next() ) {
+					vendorId = r.getInt(1);
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return vendorId;
 	}
 
 }

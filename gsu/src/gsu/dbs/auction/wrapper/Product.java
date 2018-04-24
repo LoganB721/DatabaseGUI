@@ -1,10 +1,12 @@
 package gsu.dbs.auction.wrapper;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import gsu.dbs.auction.DBConnect;
+import gsu.dbs.auction.LoginInformation;
 
 public class Product {
 	private int productID;
@@ -16,7 +18,7 @@ public class Product {
 	private int productStatus;
 	private String productDescription;
 	
-	protected Product(int id, int vendor, String pname, String pimg, int j, int k, int l, String string3) {
+	public Product(int id, int vendor, String pname, String pimg, int j, int k, int l, String string3) {
 		this.productID = id;
 		this.vendorID = vendor;
 		this.productName = pname;
@@ -74,6 +76,19 @@ public class Product {
 		}
 		
 		return null;
+	}
+	
+	public static void createProduct(Product p) throws SQLException {
+		Connection c = DBConnect.getConnection();
+		PreparedStatement ss = c.prepareStatement("INSERT INTO Products(VendorID,ProductName,ImageURL,StartingPrice,ProductTypeID,ProductStatus,ProductDesc) VALUES(?,?,?,?,?,?,?)");
+		ss.setInt(1, LoginInformation.getVendorID());
+		ss.setString(2, p.getProductName());
+		ss.setString(3, p.getProductImage());
+		ss.setInt(4, p.productStartingPrice);
+		ss.setInt(5, p.getProductTypeID());
+		ss.setInt(6, 4);
+		ss.setString(7, p.getProductDescription());
+		ss.execute();
 	}
 
 	public String getProductDescription() {

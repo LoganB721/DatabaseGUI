@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 import gsu.dbs.auction.DBConnect;
@@ -18,7 +19,9 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -72,7 +75,7 @@ public class NewUserPage extends Page {
 		Label password = new Label("Password:");
 		grid.add(password, 0, 3);
 
-		final TextField passwordTextField = new TextField();
+		final TextField passwordTextField = new PasswordField();
 		passwordTextField.setText("");
 		grid.add(passwordTextField, 1, 3);
 
@@ -80,7 +83,7 @@ public class NewUserPage extends Page {
 		Label confirmPassword = new Label("Confirm Password:");
 		grid.add(confirmPassword, 0, 4);
 
-		final TextField confirmPasswordTextField = new TextField();
+		final TextField confirmPasswordTextField = new PasswordField();
 		confirmPasswordTextField.setText("");
 		grid.add(confirmPasswordTextField, 1, 4);
 
@@ -93,10 +96,10 @@ public class NewUserPage extends Page {
 
 		Label age = new Label("Date of Birth:");
 		grid.add(age, 0, 6);
-
-		final TextField ageTextField = new TextField();
-		ageTextField.setPromptText("MM/DD/YYYY");
-		grid.add(ageTextField, 1, 6);
+		
+		final DatePicker ageChooser = new DatePicker();
+		ageChooser.setPromptText("mm/dd/yyyy");
+		grid.add(ageChooser, 1, 6);
 
 		//Back Button
 		Button back = new Button("Back to Login Page");
@@ -121,7 +124,7 @@ public class NewUserPage extends Page {
 		createUser.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				createUser(usernameTextField.getText(), passwordTextField.getText(), confirmPasswordTextField.getText(), emailAddressTextField.getText(), ageTextField.getText());
+				createUser(usernameTextField.getText(), passwordTextField.getText(), confirmPasswordTextField.getText(), emailAddressTextField.getText(), ageChooser.getValue());
 			}
 		});
 
@@ -136,7 +139,7 @@ public class NewUserPage extends Page {
 		Launcher.loadPage(new NewUserPage());
 	}
 	
-	private void createUser(String username, String password, String password2, String email, String birthdate) {
+	private void createUser(String username, String password, String password2, String email, LocalDate localDate) {
 		if ( !password.equals(password2) ) {
 			error("Password mismatch!");
 			return;
@@ -168,14 +171,9 @@ public class NewUserPage extends Page {
 				return;
 			}
 			
-			final DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
-			final Date now = new Date();
-			final Date age = df.parse(birthdate);
-			final String nowDate = df.format(now);
-			final String birthDate = df.format(df.parse(birthdate));
+			final LocalDate now = LocalDate.now();
 			
-			int userage = now.getYear()-age.getYear();
-			System.out.println(now.getYear() + " / " + age.getYear() + " / " + age + " / " + userage);
+			int userage = now.getYear()-localDate.getYear();
 			if ( userage < 16 ) {
 				error("You must be at least 16 to use this service!");
 				return;
@@ -184,9 +182,9 @@ public class NewUserPage extends Page {
 			s = c.prepareStatement("INSERT INTO User(Username,Password,DateCreated,Email,Birthdate) VALUES(?,?,?,?,?)");
 			s.setString(1, username);
 			s.setString(2, password);
-			s.setString(3, nowDate);
+			s.setDate(3, java.sql.Date.valueOf(now));
 			s.setString(4, email);
-			s.setString(5, birthDate);
+			s.setDate(5, java.sql.Date.valueOf(localDate));
 			s.executeUpdate();
 			
 			Launcher.loadPage(new ConfirmNewUser());

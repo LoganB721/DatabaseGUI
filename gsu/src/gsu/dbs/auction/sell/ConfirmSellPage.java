@@ -1,8 +1,11 @@
 package gsu.dbs.auction.sell;
 
+import java.sql.SQLException;
+
 import gsu.dbs.auction.Launcher;
 import gsu.dbs.auction.login.BrowsePage;
 import gsu.dbs.auction.ui.Page;
+import gsu.dbs.auction.wrapper.Product;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -15,6 +18,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 public class ConfirmSellPage extends Page {
+	private Product product;
+	
+	public ConfirmSellPage(Product product) {
+		this.product = product;
+	}
 
 	@Override
 	public void loadPage(Pane canvas) {
@@ -32,7 +40,7 @@ public class ConfirmSellPage extends Page {
 
 		// Vendor Created
 		Label confirm = new Label("Item Listed");
-		grid.add(confirm, 0, 1);;
+		grid.add(confirm, 0, 1);
 		
 		//Back Button
 		Button back = new Button("Back to browse page");
@@ -41,12 +49,16 @@ public class ConfirmSellPage extends Page {
 		hbBack.getChildren().add(back);
 		grid.add(hbBack, 0, 4);
 		
+		try {
+			Product.createProduct(product);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		back.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-			
-					Launcher.loadPage(new BrowsePage(null));
-			
+				Launcher.loadPage(new BrowsePage(null));
 			}
 		});
 		
