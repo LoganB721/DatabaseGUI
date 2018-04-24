@@ -42,10 +42,6 @@ public class BiddingItem {
 		return getItems(true);
 	}
 	
-	public static BiddingItem[] getItemsSold() {
-		return getItems(false);
-	}
-	
 	private static BiddingItem[] getItems(boolean onSale) {
 		String SQL = "SELECT bi.* FROM Bidding_Items bi JOIN Products p ON bi.BiddingItemID = p.ProductID;";
 		try {
@@ -147,11 +143,13 @@ public class BiddingItem {
 						ss.setString(3, pwBox.getText());
 						ss.execute();
 						
-						String SQL = "UPDATE User SET AccessLevel=2 WHERE AccountID=" + LoginInformation.UserId;
-						boolean s2 = c.createStatement().execute(SQL);
-						
-						LoginInformation.AccessLevel = 2;
-						bidOnItem(item, bidPrice);
+						if ( LoginInformation.AccessLevel < 2 ) {
+							String SQL = "UPDATE User SET AccessLevel=2 WHERE AccountID=" + LoginInformation.UserId;
+							boolean s2 = c.createStatement().execute(SQL);
+							
+							LoginInformation.AccessLevel = 2;
+							bidOnItem(item, bidPrice);
+						}
 						return;
 					}catch(Exception ee2) {
 						ee2.printStackTrace();

@@ -50,6 +50,8 @@ public class Launcher extends Application {
 		stage.setTitle("My JavaFX Application");
 		stage.setScene(new Scene(pane, 1280, 720));
 		stage.show();
+		
+		primaryStage = stage;
 
 		loadPage(new LoginPage());
 	}
@@ -82,11 +84,17 @@ public class Launcher extends Application {
 		topBar.getChildren().add(hbox);
 
 		// Store name
-		Label title = new Label(newTitle);
+		Hyperlink title = new Hyperlink("Auction Store Mockup");
 		title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 28));
 		title.setTextFill(Color.WHITESMOKE);
 		title.setMinWidth(300);
 		hbox.getChildren().add(title);
+		title.setOnAction(event -> {
+			Launcher.loadPage(new BrowsePage(null));
+		});
+		
+		if ( primaryStage != null )
+			primaryStage.setTitle(newTitle);
 		
 		// Search bar
 		TextField searchBar = new TextField();
