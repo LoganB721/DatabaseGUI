@@ -50,7 +50,9 @@ public class BrowsePage extends Page {
 		itemGrid.setVgap(10);
 		for (int i = 0; i < objects.length; i++) {
 			BiddingItem b = objects[i];
-			if ( search == null || b.getProduct().getProductName().contains(search) || b.getProduct().getProductDescription().contains(search) ) {
+			if ( search == null
+					|| b.getProduct().getProductName().toLowerCase().contains(search.toLowerCase())
+					|| b.getProduct().getProductDescription().toLowerCase().contains(search.toLowerCase()) ) {
 				loadItem(itemGrid, i, 0, objects[i]);
 			}
 		}
