@@ -1,5 +1,9 @@
 package gsu.dbs.auction.login;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.concurrent.TimeUnit;
+
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -23,6 +27,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 public class BrowsePage extends Page {
 	public static String search = null;
@@ -54,12 +61,19 @@ public class BrowsePage extends Page {
 		itemGrid.setAlignment(Pos.TOP_CENTER);
 		itemGrid.setHgap(10);
 		itemGrid.setVgap(10);
+		int row = 0;
+		int column = 0;
 		for (int i = 0; i < objects.length; i++) {
 			BiddingItem b = objects[i];
 			if ( search == null
 					|| b.getProduct().getProductName().toLowerCase().contains(search.toLowerCase())
 					|| b.getProduct().getProductDescription().toLowerCase().contains(search.toLowerCase()) ) {
-				displayProduct(itemGrid, i, 0, objects[i]);
+				displayProduct(itemGrid, column, row, objects[i]);
+			}
+			column++;
+			if ( column > 6 ) {
+				column = 0;
+				row++;
 			}
 		}
 		
@@ -107,6 +121,26 @@ public class BrowsePage extends Page {
 			Launcher.loadPage(new DisplayItem(object));
 		});		
 		itemBox.getChildren().add(nl);
+		
+		Timestamp now = Timestamp.from(Instant.now());
+		Timestamp end = object.getEndDate();
+		long millis = end.getTime()-now.getTime();
+		int seconds = (int) (millis / 1000) % 60 ;
+		int minutes = (int) ((millis / (1000*60)) % 60);
+		int hours   = (int) ((millis / (1000*60*60)) % 24);
+		String remaining = "";
+		if ( hours > 0 )
+			remaining += hours + " hour(s) ";
+		if ( minutes > 0 )
+			remaining += minutes + " minute(s) ";
+		if ( hours < 1 ) {
+			remaining += seconds + " second(s)";
+		}
+		
+		Text remain = new Text(remaining);
+		remain.setFont(Font.font(8));
+		remain.setTextAlignment(TextAlignment.RIGHT);
+		itemBox.getChildren().add(remain);
 	}
 	
 

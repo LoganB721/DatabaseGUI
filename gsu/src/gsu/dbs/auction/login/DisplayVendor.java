@@ -3,11 +3,14 @@ package gsu.dbs.auction.login;
 import gsu.dbs.auction.Launcher;
 import gsu.dbs.auction.ui.Page;
 import gsu.dbs.auction.wrapper.BiddingItem;
+import gsu.dbs.auction.wrapper.Review;
 import gsu.dbs.auction.wrapper.Vendor;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -64,13 +67,22 @@ public class DisplayVendor extends Page {
 		});
 		
 		// Product Pane
+		ScrollPane scroll = new ScrollPane();
+		scroll.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+		scroll.setStyle(""
+				+ "-fx-background: #FFFFFF;"
+				+ "-fx-border-color: #FFFFFF;");
+		scroll.setPrefWidth(Integer.MAX_VALUE);
+		scroll.setPrefHeight(Integer.MAX_VALUE);
+		scroll.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+		scroll.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
+		divider.getChildren().add(scroll);
+		
 		VBox pp = new VBox();
 		pp.setPadding(new Insets(8,8,8,8));
-		pp.setPrefWidth(Integer.MAX_VALUE);
-		pp.setPrefHeight(Integer.MAX_VALUE);
 		pp.setAlignment(Pos.TOP_LEFT);
 		pp.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-		divider.getChildren().add(pp);
+		scroll.setContent(pp);
 		
 		HBox hb = new HBox();
 		pp.getChildren().add(hb);
@@ -88,7 +100,7 @@ public class DisplayVendor extends Page {
 		tvb.getChildren().add(sold);
 		
 		StackPane space = new StackPane();
-		space.setMinHeight(100);
+		space.setMinHeight(48);
 		space.setMaxHeight(space.getMinHeight());
 		tvb.getChildren().add(space);
 		
@@ -104,14 +116,44 @@ public class DisplayVendor extends Page {
 		int row = 0;
 		int column = 0;
 		for (int i = 0; i < items.length; i++) {
-			if ( column > 3 ) {
+			if ( column >= 9 ) {
 				column = 0;
 				row++;
 			}
 			BrowsePage.displayProduct(g, column++, row, items[i]);
 		}
 		
+
 		
+		StackPane space2 = new StackPane();
+		space2.setMinHeight(48);
+		space2.setMaxHeight(space2.getMinHeight());
+		tvb.getChildren().add(space2);
+		
+		
+		Text t3 = new Text("Reviews of products");
+		t3.setFont(Font.font("Tahoma", FontWeight.NORMAL, 28));
+		tvb.getChildren().add(t3);
+		Review[] reviews = vendor.getReviews();
+		if ( reviews.length == 0 ) {
+			Text no = new Text("This user has no reviews");
+			tvb.getChildren().add(no);
+		} else {
+			for (int i = 0; i < reviews.length; i++) {
+				Review r = reviews[i];
+				Text rr = new Text(r.getBuyer().getFirstName() + " said:");
+				tvb.getChildren().add(rr);
+				
+				Text cm = new Text(r.getComment());
+				cm.setFont(Font.font(10));
+				tvb.getChildren().add(cm);
+				
+				StackPane small = new StackPane();
+				small.setMinHeight(8);
+				small.setMaxHeight(small.getMinHeight());
+				tvb.getChildren().add(small);
+			}
+		}
 	}
 
 }

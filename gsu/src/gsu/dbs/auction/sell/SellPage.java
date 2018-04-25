@@ -16,6 +16,7 @@ import gsu.dbs.auction.DBConnect;
 import gsu.dbs.auction.Launcher;
 import gsu.dbs.auction.LoginInformation;
 import gsu.dbs.auction.login.BrowsePage;
+import gsu.dbs.auction.login.DisplayItem;
 import gsu.dbs.auction.login.LoginPage;
 import gsu.dbs.auction.ui.Page;
 import gsu.dbs.auction.wrapper.BiddingItem;
@@ -247,7 +248,7 @@ public class SellPage extends Page {
 			s.execute();
 			
 			Launcher.error("Item sucessfully listed!");
-			Launcher.loadPage(new BrowsePage(BiddingItem.getBiddingItem(product)));
+			Launcher.loadPage(new DisplayItem(BiddingItem.getBiddingItem(product)));
 		} catch (SQLException e) {
 			Launcher.error("Error listing product. Please try again later!");
 			e.printStackTrace();

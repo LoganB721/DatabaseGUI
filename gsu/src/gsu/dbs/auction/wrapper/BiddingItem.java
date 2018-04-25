@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -30,10 +31,10 @@ import javafx.stage.Stage;
 
 public class BiddingItem {
 	private Product product;
-	private Date startTime;
-	private Date endTime;
+	private Timestamp startTime;
+	private Timestamp endTime;
 	
-	public BiddingItem( Product p, Date start, Date end ) {
+	public BiddingItem( Product p, Timestamp start, Timestamp end ) {
 		this.product = p;
 		this.startTime = start;
 		this.endTime = end;
@@ -59,8 +60,8 @@ public class BiddingItem {
 			ArrayList<BiddingItem> temp = new ArrayList<BiddingItem>();
 			while(result.next()) {
 				int productID = result.getInt(1);
-				Date startTime = result.getDate(2);
-				Date endTime = result.getDate(3);
+				Timestamp startTime = result.getTimestamp(2);
+				Timestamp endTime = result.getTimestamp(3);
 				BiddingItem o = new BiddingItem(Product.getProductFromID(productID), startTime, endTime);
 				temp.add(o);
 			}
@@ -187,17 +188,21 @@ public class BiddingItem {
 		}
 	}
 
-	public static String getBiddingItem(Product product) throws SQLException {
+	public static BiddingItem getBiddingItem(Product product) throws SQLException {
 		String SQL = "SELECT * FROM Bidding_Items WHERE BiddingItemID = " + product.getProductID();
 		Connection c = DBConnect.getConnection();
 		ResultSet result = c.createStatement().executeQuery(SQL);
 		
 		if ( result.isBeforeFirst() && result.next() ) {
 			int productID = result.getInt(1);
-			Date startTime = result.getDate(2);
-			Date endTime = result.getDate(3);
-			BiddingItem o = new BiddingItem(product, startTime, endTime);
+			Timestamp startTime = result.getTimestamp(2);
+			Timestamp endTime = result.getTimestamp(3);
+			return new BiddingItem(product, startTime, endTime);
 		}
 		return null;
+	}
+
+	public Timestamp getEndDate() {
+		return this.endTime;
 	}
 }

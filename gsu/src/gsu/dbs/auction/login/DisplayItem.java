@@ -106,7 +106,7 @@ public class DisplayItem extends Page {
 		ivp.setMouseTransparent(false);
 		ivp.setPrefWidth(300);
 		tvb.getChildren().add(ivp);
-		ImageView iv = new ImageView(new Image(b.getProduct().getProductImage()));
+		ImageView iv = new ImageView(new Image(b.getProduct().getProductImage(),true));
 		iv.setFitWidth(300);
 		iv.setMouseTransparent(true);
 		iv.setPreserveRatio(true);
