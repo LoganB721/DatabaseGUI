@@ -42,6 +42,8 @@ public class AdminPanel extends Page{
 	TableView tv;
 	HBox hb; //Text Fields
 	
+	private String lastBuildSQL = "";
+	
 	public void loadPage(Pane canvas)  {
 
 
@@ -300,6 +302,10 @@ public class AdminPanel extends Page{
 	        		Connection c = DBConnect.getConnection();
 	        		c.createStatement().execute(text.getText());
 	        		Launcher.error("Command successful");
+	        		
+	        		if ( lastBuildSQL != null && lastBuildSQL.length() > 1 ) {
+	        			build(grid, lastBuildSQL);
+	        		}
 	        	} catch(Exception e) {
 	        		Launcher.error(e.getMessage());
 	        	}
@@ -316,6 +322,7 @@ public class AdminPanel extends Page{
 	}
 
 	private void buildData(String query){
+		lastBuildSQL = query;
 		data = FXCollections.observableArrayList();
 		tv = new TableView();
 		tv.setPrefWidth(Integer.MAX_VALUE);
