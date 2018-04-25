@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import gsu.dbs.auction.DBConnect;
@@ -95,6 +96,10 @@ public class BiddingItem {
 		
 		return -1;
 	}
+	
+	public static void sellProduct(Product p, LocalDate endDate) {
+		
+	}
 
 	public static void bidOnItem(BiddingItem item, int bidPrice) {
 		Connection c;
@@ -172,5 +177,19 @@ public class BiddingItem {
 			Launcher.error("Error processing bid. Please try again later");
 			e.printStackTrace();
 		}
+	}
+
+	public static String getBiddingItem(Product product) throws SQLException {
+		String SQL = "SELECT bi.* FROM Bidding_Items WHERE BiddingItemID = " + product.getProductID();
+		Connection c = DBConnect.getConnection();
+		ResultSet result = c.createStatement().executeQuery(SQL);
+		
+		if ( result.isBeforeFirst() && result.next() ) {
+			int productID = result.getInt(1);
+			Date startTime = result.getDate(2);
+			Date endTime = result.getDate(3);
+			BiddingItem o = new BiddingItem(product, startTime, endTime);
+		}
+		return null;
 	}
 }

@@ -7,8 +7,11 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -53,28 +56,47 @@ public class BrowsePage extends Page {
 			if ( search == null
 					|| b.getProduct().getProductName().toLowerCase().contains(search.toLowerCase())
 					|| b.getProduct().getProductDescription().toLowerCase().contains(search.toLowerCase()) ) {
-				loadItem(itemGrid, i, 0, objects[i]);
+				displayProduct(itemGrid, i, 0, objects[i]);
 			}
 		}
 		
 		itemPane.getChildren().add(itemGrid);
 	}
 
-	private void loadItem(GridPane grid, int column, int row, BiddingItem object) {
+	private void displayProduct(GridPane grid, int column, int row, BiddingItem object) {
+		VBox itemBox = new VBox();
+		itemBox.setAlignment(Pos.CENTER);
+		grid.add(itemBox, column, row);
+		
 		StackPane pane = new StackPane();
 		pane.setMinHeight(100);
 		pane.setMinWidth(100);
-		pane.setBackground(new Background(new BackgroundFill(Color.LIGHTSTEELBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
-		grid.add(pane, column, row);
+		pane.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+		itemBox.getChildren().add(pane);
+		
+		Button ivp = new Button();
+		ivp.setAlignment(Pos.CENTER);
+		ivp.setMaxWidth(pane.getMinWidth());
+		ivp.setMaxHeight(pane.getMinHeight());
+		pane.getChildren().add(ivp);
+		Image img = new Image(object.getProduct().getProductImage());
+		ImageView iv = new ImageView(img);
+		if ( img.getWidth() > img.getHeight() ) {
+			iv.setFitWidth(pane.getMinWidth());
+		} else {
+			iv.setFitHeight(pane.getMinHeight());
+		}
+		iv.setPreserveRatio(true);
+		ivp.setGraphic(iv);
+		ivp.setOnAction(event -> {
+			Launcher.loadPage(new DisplayItem(object));	
+		});
 		
 		Hyperlink nl = new Hyperlink(object.getProduct().getProductName());
-		nl.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				Launcher.loadPage(new DisplayItem(object));			    
-			}
+		nl.setOnAction(event -> {
+			Launcher.loadPage(new DisplayItem(object));
 		});		
-		pane.getChildren().add(nl);
+		itemBox.getChildren().add(nl);
 	}
 	
 

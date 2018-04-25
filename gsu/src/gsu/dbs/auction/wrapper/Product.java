@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.mysql.jdbc.Statement;
+
 import gsu.dbs.auction.DBConnect;
 import gsu.dbs.auction.LoginInformation;
 
@@ -80,7 +82,7 @@ public class Product {
 	
 	public static void createProduct(Product p) throws SQLException {
 		Connection c = DBConnect.getConnection();
-		PreparedStatement ss = c.prepareStatement("INSERT INTO Products(VendorID,ProductName,ImageURL,StartingPrice,ProductTypeID,ProductStatus,ProductDesc) VALUES(?,?,?,?,?,?,?)");
+		PreparedStatement ss = c.prepareStatement("INSERT INTO Products(VendorID,ProductName,ImageURL,StartingPrice,ProductTypeID,ProductStatus,ProductDesc) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 		ss.setInt(1, LoginInformation.getVendorID());
 		ss.setString(2, p.getProductName());
 		ss.setString(3, p.getProductImage());
@@ -89,6 +91,11 @@ public class Product {
 		ss.setInt(6, 4);
 		ss.setString(7, p.getProductDescription());
 		ss.execute();
+		
+		ResultSet r = ss.getGeneratedKeys();
+		if (r.next()){
+		    p.productID=r.getInt(1);
+		}
 	}
 
 	public String getProductDescription() {

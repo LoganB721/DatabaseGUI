@@ -9,6 +9,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
@@ -93,10 +94,13 @@ public class DisplayItem extends Page {
 		// Display image
 		StackPane ivp = new StackPane();
 		ivp.setAlignment(Pos.TOP_LEFT);
+		ivp.setCursor(Cursor.OPEN_HAND);
+		ivp.setMouseTransparent(false);
 		ivp.setPrefWidth(300);
 		tvb.getChildren().add(ivp);
 		ImageView iv = new ImageView(new Image(b.getProduct().getProductImage()));
 		iv.setFitWidth(300);
+		iv.setMouseTransparent(true);
 		iv.setPreserveRatio(true);
 		ivp.getChildren().add(iv);
 		

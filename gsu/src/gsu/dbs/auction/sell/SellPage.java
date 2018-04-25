@@ -3,6 +3,11 @@ package gsu.dbs.auction.sell;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -13,6 +18,7 @@ import gsu.dbs.auction.LoginInformation;
 import gsu.dbs.auction.login.BrowsePage;
 import gsu.dbs.auction.login.LoginPage;
 import gsu.dbs.auction.ui.Page;
+import gsu.dbs.auction.wrapper.BiddingItem;
 import gsu.dbs.auction.wrapper.Product;
 import javafx.scene.layout.Pane;
 import javafx.collections.FXCollections;
@@ -24,6 +30,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -87,9 +94,21 @@ public class SellPage extends Page {
 		Label desclabel = new Label("Item Description:");
 		grid.add(desclabel, 0, 5);
 		TextArea descfield = new TextArea();
+		descfield.setPrefRowCount(4);
+		descfield.setPrefColumnCount(28);
+		descfield.setWrapText(true);
 		grid.add(descfield, 1, 5);
 		
-		Button btn = new Button("POST");
+		
+		Label bcd = new Label("Bid close date:");
+		grid.add(bcd, 0, 6);
+		final DatePicker ageChooser = new DatePicker();
+		ageChooser.setPromptText("mm/dd/yyyy");
+		ageChooser.setValue(LocalDate.now().plusDays(1));
+		grid.add(ageChooser, 1, 6);
+		
+		
+		Button btn = new Button("Sell Item");
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -98,29 +117,50 @@ public class SellPage extends Page {
 				int status = 0;
 				String desc = descfield.getText();
 				if ( typeid >= 0 ) {
-					Product product = new Product(-1, -1, itemname.getText(), imagefield.getText(), price, typeid, status, desc );
-					int vendorID = LoginInformation.getVendorID();
-					if ( vendorID == -1 ) {
-						createVendorSellProduct(product);
+					if ( itemname.getText().length() > 0 ) {
+						if ( price > 1 ) {
+							if ( imagefield.getText().contains(".") ) {
+								LocalDate now = LocalDate.now();
+								int dist = (int) (ageChooser.getValue().toEpochDay() - now.toEpochDay());
+								if ( dist > 1 && dist < 31 ) {
+									Product product = new Product(-1, -1, itemname.getText(), imagefield.getText(), price, typeid, status, desc );
+									int vendorID = LoginInformation.getVendorID();
+									if ( vendorID == -1 ) {
+										createVendorSellProduct(product, ageChooser.getValue());
+									} else {
+										//Launcher.loadPage(new ConfirmSellPage(product, ageChooser.getValue()));
+										listItem( product, ageChooser.getValue() );
+									}
+								} else {
+									Launcher.error("Invalid bid end time. Bid must be at least 1 day, and less than 31 days.");
+								}
+							} else {
+								Launcher.error("Invalid product image");
+							}
+						} else {
+							Launcher.error("Price too low ("+price+").");
+						}
 					} else {
-						Launcher.loadPage(new ConfirmSellPage(product));
+						Launcher.error("Invalid product name");
 					}
 				} else {
 					Launcher.error("Invalid product type");
 				}
 			}
 		});
+		
+		
 		HBox hbBtn = new HBox(10);
 		hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
 		hbBtn.getChildren().add(btn);
-		grid.add(hbBtn, 1, 6);
+		grid.add(hbBtn, 1, 7);
 
 		
 		mainHolder.getChildren().add(grid);
 		canvas.getChildren().add(mainHolder);
 	}
 
-	private void createVendorSellProduct(Product product) {
+	private void createVendorSellProduct(Product product, LocalDate localDate) {
 		Stage s = Launcher.popup();
 		VBox mvb = new VBox();
 		mvb.setPadding(new Insets(8,8,8,8));
@@ -173,7 +213,7 @@ public class SellPage extends Page {
 				
 				LoginInformation.AccessLevel = 3;
 
-				Launcher.loadPage(new ConfirmSellPage(product));
+				listItem(product, localDate);
 				s.close();
 				return;
 			}catch(Exception ee2) {
@@ -182,6 +222,27 @@ public class SellPage extends Page {
 		});
 	}
 	
+	private void listItem(Product product, LocalDate localDate) {
+		try {
+			Product.createProduct(product);
+			
+			String SQL = "INSERT INTO Bidding_Items(BiddingItemID,StartTime,EndTime) VALUES(?,?,?)";
+			Connection c = DBConnect.getConnection();
+			
+			PreparedStatement s = c.prepareStatement(SQL);
+			s.setInt(1, product.getProductID());
+			s.setDate(2, java.sql.Date.valueOf(LocalDateTime.of(LocalDate.now(), LocalTime.now()).toLocalDate()));
+			s.setDate(3, java.sql.Date.valueOf(LocalDateTime.of(localDate, LocalTime.now()).toLocalDate()));
+			s.execute();
+			
+			Launcher.error("Item sucessfully listed!");
+			Launcher.loadPage(new BrowsePage(BiddingItem.getBiddingItem(product)));
+		} catch (SQLException e) {
+			Launcher.error("Error listing product. Please try again later!");
+			e.printStackTrace();
+		}
+	}
+
 	private String[] getProductTypes() {
 		if ( cached_product_types == null ) {
 			cached_product_types = new HashMap<String,Integer>();
