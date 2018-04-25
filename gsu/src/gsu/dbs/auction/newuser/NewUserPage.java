@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.Date;
 
 import gsu.dbs.auction.DBConnect;
+import gsu.dbs.auction.HashGeneratorUtils;
 import gsu.dbs.auction.Launcher;
 import gsu.dbs.auction.LoginInformation;
 import gsu.dbs.auction.login.LoginPage;
@@ -181,7 +182,7 @@ public class NewUserPage extends Page {
 			
 			s = c.prepareStatement("INSERT INTO User(Username,Password,DateCreated,Email,Birthdate) VALUES(?,?,?,?,?)");
 			s.setString(1, username);
-			s.setString(2, password);
+			s.setString(2, HashGeneratorUtils.generateSHA1(password));
 			s.setDate(3, java.sql.Date.valueOf(now));
 			s.setString(4, email);
 			s.setDate(5, java.sql.Date.valueOf(localDate));

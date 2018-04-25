@@ -180,7 +180,7 @@ public class BiddingItem {
 	}
 
 	public static String getBiddingItem(Product product) throws SQLException {
-		String SQL = "SELECT bi.* FROM Bidding_Items WHERE BiddingItemID = " + product.getProductID();
+		String SQL = "SELECT * FROM Bidding_Items WHERE BiddingItemID = " + product.getProductID();
 		Connection c = DBConnect.getConnection();
 		ResultSet result = c.createStatement().executeQuery(SQL);
 		

@@ -47,7 +47,7 @@ public class LoginInformation {
 			Connection c = DBConnect.getConnection();
 			PreparedStatement s = c.prepareStatement("SELECT Username,AccountId,AccessLevel FROM User WHERE Username = ? AND Password = ?");
 			s.setString(1, username);
-			s.setString(2, password);
+			s.setString(2, HashGeneratorUtils.generateSHA1(password));
 			ResultSet result = s.executeQuery();
 			
 			if ( !result.next() ) {

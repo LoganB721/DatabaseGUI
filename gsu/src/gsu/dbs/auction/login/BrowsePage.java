@@ -1,5 +1,8 @@
 package gsu.dbs.auction.login;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import gsu.dbs.auction.Launcher;
 import gsu.dbs.auction.ui.Page;
 import gsu.dbs.auction.wrapper.BiddingItem;
@@ -71,24 +74,31 @@ public class BrowsePage extends Page {
 		StackPane pane = new StackPane();
 		pane.setMinHeight(100);
 		pane.setMinWidth(100);
+		pane.setMaxWidth(pane.getMinWidth());
+		pane.setMaxHeight(pane.getMinHeight());
 		pane.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 		itemBox.getChildren().add(pane);
 		
-		Button ivp = new Button();
+		StackPane ivp = new StackPane();
 		ivp.setAlignment(Pos.CENTER);
 		ivp.setMaxWidth(pane.getMinWidth());
 		ivp.setMaxHeight(pane.getMinHeight());
 		pane.getChildren().add(ivp);
-		Image img = new Image(object.getProduct().getProductImage());
-		ImageView iv = new ImageView(img);
-		if ( img.getWidth() > img.getHeight() ) {
-			iv.setFitWidth(pane.getMinWidth());
-		} else {
-			iv.setFitHeight(pane.getMinHeight());
-		}
+		ImageView iv = new ImageView();
+		Image img = new Image(object.getProduct().getProductImage(), true);
+		img.progressProperty().addListener((observable, oldImage, newImage) -> {
+			if ( ((double)newImage) >= 1.0 ) {
+				if ( img.getWidth() > img.getHeight() ) {
+					iv.setFitWidth(pane.getMinWidth());
+				} else {
+					iv.setFitHeight(pane.getMinHeight());
+				}
+			}
+		});
+		iv.setImage(img);
 		iv.setPreserveRatio(true);
-		ivp.setGraphic(iv);
-		ivp.setOnAction(event -> {
+		ivp.getChildren().add(iv);
+		ivp.setOnMouseClicked(event -> {
 			Launcher.loadPage(new DisplayItem(object));	
 		});
 		

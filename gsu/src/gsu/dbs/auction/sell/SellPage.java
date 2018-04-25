@@ -154,6 +154,12 @@ public class SellPage extends Page {
 		hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
 		hbBtn.getChildren().add(btn);
 		grid.add(hbBtn, 1, 7);
+		
+		Button back = new Button("Back");
+		back.setOnAction(event -> {
+			Launcher.loadPage(new BrowsePage(BrowsePage.search));
+		});
+		grid.add(back, 0, 7);
 
 		
 		mainHolder.getChildren().add(grid);
@@ -229,10 +235,15 @@ public class SellPage extends Page {
 			String SQL = "INSERT INTO Bidding_Items(BiddingItemID,StartTime,EndTime) VALUES(?,?,?)";
 			Connection c = DBConnect.getConnection();
 			
+			LocalTime localTime = LocalTime.now();
+			localTime = localTime.minusNanos(localTime.getNano());
+			LocalDate nowDate = LocalDate.now();
+			
+			
 			PreparedStatement s = c.prepareStatement(SQL);
 			s.setInt(1, product.getProductID());
-			s.setDate(2, java.sql.Date.valueOf(LocalDateTime.of(LocalDate.now(), LocalTime.now()).toLocalDate()));
-			s.setDate(3, java.sql.Date.valueOf(LocalDateTime.of(localDate, LocalTime.now()).toLocalDate()));
+			s.setString(2, nowDate + " " + localTime);
+			s.setString(3, localDate + " " + localTime);
 			s.execute();
 			
 			Launcher.error("Item sucessfully listed!");
