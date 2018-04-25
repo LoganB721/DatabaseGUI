@@ -112,7 +112,7 @@ public class SellPage extends Page {
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				int price = (int) Float.parseFloat(category.getText());
+				int price = (int) Float.parseFloat(category.getText().replace("$", ""));
 				int typeid = getProductID(producttype.getValue());
 				int status = 0;
 				String desc = descfield.getText();

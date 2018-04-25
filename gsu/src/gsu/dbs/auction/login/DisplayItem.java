@@ -4,6 +4,7 @@ import gsu.dbs.auction.Launcher;
 import gsu.dbs.auction.ui.Page;
 import gsu.dbs.auction.wrapper.BidHistory;
 import gsu.dbs.auction.wrapper.BiddingItem;
+import gsu.dbs.auction.wrapper.Vendor;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -90,6 +91,13 @@ public class DisplayItem extends Page {
 		Text t = new Text(b.getProduct().getProductName());
 		t.setFont(Font.font("Tahoma", FontWeight.NORMAL, 28));
 		tvb.getChildren().add(t);
+		
+		Vendor vendor = new Vendor(b.getProduct().getVendorID());
+		Hyperlink vend = new Hyperlink(vendor.getFirstName() + " " + vendor.getLastName());
+		tvb.getChildren().add(vend);
+		vend.setOnAction(event -> {
+			Launcher.loadPage(new DisplayVendor(b, vendor));
+		});
 		
 		// Display image
 		StackPane ivp = new StackPane();

@@ -66,7 +66,7 @@ public class BrowsePage extends Page {
 		itemPane.getChildren().add(itemGrid);
 	}
 
-	private void displayProduct(GridPane grid, int column, int row, BiddingItem object) {
+	public static void displayProduct(GridPane grid, int column, int row, BiddingItem object) {
 		VBox itemBox = new VBox();
 		itemBox.setAlignment(Pos.CENTER);
 		grid.add(itemBox, column, row);

@@ -156,7 +156,7 @@ public class AdminPanel extends Page{
 				build(grid,"select * from Access_Level");
 			}
 			if(selected.contains("Customer Reviews")) {
-				build(grid,"select cr.CustomerID, u.Username, cr.VendorID, v.VendorName, "
+				build(grid,"select cr.CustomerID, u.Username, cr.VendorID, v.VendorFirstName,v.VendorLastName, "
 						+ "	cr.Rating, cr.Comment"
 						+ " from Customer_Review cr left Join User u "
 						+ "	ON cr.CustomerID = u.AccountID "

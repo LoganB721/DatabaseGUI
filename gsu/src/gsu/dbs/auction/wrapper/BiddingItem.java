@@ -40,11 +40,19 @@ public class BiddingItem {
 	}
 	
 	public static BiddingItem[] getItemsLive() {
-		return getItems(true);
+		return getItems(-1);
 	}
 	
-	private static BiddingItem[] getItems(boolean onSale) {
-		String SQL = "SELECT bi.* FROM Bidding_Items bi JOIN Products p ON bi.BiddingItemID = p.ProductID;";
+	public static BiddingItem[] getItemsSoldByVendor(int VendorID) {
+		return getItems(VendorID);
+	}
+	
+	private static BiddingItem[] getItems(int sellerId) {
+		String append = "";
+		if ( sellerId != -1 ) {
+			append = " WHERE p.VendorID = " + sellerId;
+		}
+		String SQL = "SELECT bi.* FROM Bidding_Items bi JOIN Products p ON bi.BiddingItemID = p.ProductID" + append;
 		try {
 			Connection c = DBConnect.getConnection();
 			ResultSet result = c.createStatement().executeQuery(SQL);

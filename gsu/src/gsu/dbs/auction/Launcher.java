@@ -142,15 +142,17 @@ public class Launcher extends Application {
 
 
 		//Admin hyperlink		
-		Hyperlink admin = new Hyperlink("Administrator");
-		admin.setAlignment(Pos.CENTER);
-		admin.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent arg0) {
-				Launcher.loadPage(new AdminHomePage());     //Ask for Administrator login to access next page?
-			}	
-		});
-		vbox.getChildren().add(admin);
+		if ( LoginInformation.AccessLevel >= 4 ) {
+			Hyperlink admin = new Hyperlink("Administrator");
+			admin.setAlignment(Pos.CENTER);
+			admin.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent arg0) {
+					Launcher.loadPage(new AdminHomePage());     //Ask for Administrator login to access next page?
+				}	
+			});
+			vbox.getChildren().add(admin);
+		}
 
 		Hyperlink signOut = new Hyperlink("Sign Out");
 		signOut.setAlignment(Pos.CENTER);
