@@ -122,25 +122,15 @@ public class BrowsePage extends Page {
 		});		
 		itemBox.getChildren().add(nl);
 		
-		Timestamp now = Timestamp.from(Instant.now());
-		Timestamp end = object.getEndDate();
-		long millis = end.getTime()-now.getTime();
-		int seconds = (int) (millis / 1000) % 60 ;
-		int minutes = (int) ((millis / (1000*60)) % 60);
-		int hours   = (int) ((millis / (1000*60*60)) % 24);
-		String remaining = "";
-		if ( hours > 0 )
-			remaining += hours + " hour(s) ";
-		if ( minutes > 0 )
-			remaining += minutes + " minute(s) ";
-		if ( hours < 1 ) {
-			remaining += seconds + " second(s)";
-		}
-		
+		String remaining = object.getBidString();
 		Text remain = new Text(remaining);
 		remain.setFont(Font.font(8));
 		remain.setTextAlignment(TextAlignment.RIGHT);
 		itemBox.getChildren().add(remain);
+		
+		if ( !object.canBidOn() ) {
+			remain.setFill(Color.RED);
+		}
 	}
 	
 

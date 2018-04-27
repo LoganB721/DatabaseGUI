@@ -144,56 +144,68 @@ public class DisplayItem extends Page {
 		}
 		
 		// Bid Button
-		Button b = new Button("Bid!");
-		rightPane2.getChildren().add(b);
-		b.setOnAction(event -> {
-			Stage s = Launcher.popup();
-			VBox mvb = new VBox();
-			mvb.setPadding(new Insets(8,8,8,8));
-			mvb.setSpacing(8);
-			Scene scene = new Scene(mvb, 300, 150);
-			s.setScene(scene);
-			s.show();
-			
-			Text mt = new Text("Would you like to bid on item " + this.b.getProduct().getProductName() + "?");
-			mt.setWrappingWidth(300);
-			mvb.getChildren().add(mt);
-			
-			int minBid = this.b.getCurrentHighestBid()+1;
-			
-			Text mt2 = new Text("Minimum bid: $" + minBid);
-			mvb.getChildren().add(mt2);
-			
-			TextField tf = new TextField();
-			tf.setMaxWidth(128);
-			tf.setPromptText("$" + minBid);
-			mvb.getChildren().add(tf);
-			final BooleanProperty firstTime = new SimpleBooleanProperty(true); // Variable to store the focus on stage load
-	        tf.focusedProperty().addListener((observable,  oldValue,  newValue) -> {
-	            if(newValue && firstTime.get()){
-	                mvb.requestFocus(); // Delegate the focus to container
-	                firstTime.setValue(false); // Variable value changed for future references
-	            }
-	        });
-			
-			Button go = new Button("Bid");
-			mvb.getChildren().add(go);
-			go.setOnAction(e -> {
-				s.close();
-				String tt = tf.getText();
-				try {
-					int tt2 = Integer.parseInt(tt);
-					if ( tt2 < minBid ) {
-						Launcher.error("Your bid must be at least $" + minBid);
-					} else {
-						BiddingItem.bidOnItem(this.b,tt2);
-						Launcher.loadPage(new DisplayItem(this.b));
-					}
-				} catch(Exception ee) {
-					Launcher.error("Invalid bid amount!");
-				}
+        if ( this.b.canBidOn() ) {
+			Button b = new Button("Bid!");
+			rightPane2.getChildren().add(b);
+			b.setOnAction(event -> {
+				Stage s = Launcher.popup();
+				VBox mvb = new VBox();
+				mvb.setPadding(new Insets(8,8,8,8));
+				mvb.setSpacing(8);
+				Scene scene = new Scene(mvb, 300, 150);
+				s.setScene(scene);
+				s.show();
+				
+				Text mt = new Text("Would you like to bid on item " + this.b.getProduct().getProductName() + "?");
+				mt.setWrappingWidth(300);
+				mvb.getChildren().add(mt);
+				
+				int minBid = this.b.getCurrentHighestBid()+1;
+				
+				Text mt2 = new Text("Minimum bid: $" + minBid);
+				mvb.getChildren().add(mt2);
+				
+				TextField tf = new TextField();
+				tf.setMaxWidth(128);
+				tf.setPromptText("$" + minBid);
+				mvb.getChildren().add(tf);
+				final BooleanProperty firstTime = new SimpleBooleanProperty(true); // Variable to store the focus on stage load
+		        tf.focusedProperty().addListener((observable,  oldValue,  newValue) -> {
+		            if(newValue && firstTime.get()){
+		                mvb.requestFocus(); // Delegate the focus to container
+		                firstTime.setValue(false); // Variable value changed for future references
+		            }
+		        });
+				
+		        if ( this.b.canBidOn() ) {
+					Button go = new Button("Bid");
+					mvb.getChildren().add(go);
+					go.setOnAction(e -> {
+						s.close();
+						String tt = tf.getText();
+						try {
+							int tt2 = Integer.parseInt(tt);
+							if ( tt2 < minBid ) {
+								Launcher.error("Your bid must be at least $" + minBid);
+							} else {
+								BiddingItem.bidOnItem(this.b,tt2);
+								Launcher.loadPage(new DisplayItem(this.b));
+							}
+						} catch(Exception ee) {
+							Launcher.error("Invalid bid amount!");
+						}
+					});
+		        } else {
+		        		Text nobid = new Text("This object can no longer be bid on!");
+		        		nobid.setFill(Color.RED);
+		        		mvb.getChildren().add(nobid);
+		        }
 			});
-		});
+	    } else {
+	    		Text nobid = new Text("This object can no longer be bid on!");
+	    		nobid.setFill(Color.RED);
+	    		rightPane2.getChildren().add(nobid);
+	    }
 		
 		Text about = new Text("About this product");
 		about.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));

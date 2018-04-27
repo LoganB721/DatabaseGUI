@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -204,5 +205,50 @@ public class BiddingItem {
 
 	public Timestamp getEndDate() {
 		return this.endTime;
+	}
+	
+	public boolean canBidOn() {
+		Timestamp now = Timestamp.from(Instant.now());
+		Timestamp end = getEndDate();
+		long millis = end.getTime()-now.getTime();
+		
+		return millis > 0;
+	}
+	
+	public String getBidString() {
+		Timestamp now = Timestamp.from(Instant.now());
+		Timestamp end = getEndDate();
+		long millis = end.getTime()-now.getTime();
+		
+		String remaining = "";
+		if ( millis > 0 ) {
+			int seconds = (int) ( millis / 1000) % 60 ;
+			int minutes = (int) ((millis / (1000*60)) % 60);
+			int hours   = (int) ((millis / (1000*60*60)) % 24);
+			int days    = (int) ( millis / (1000*60*60*24));
+			
+			if ( days > 0 ) {
+				remaining += days + " day(s) ";
+			}
+			if ( hours > 0 ) {
+				remaining += hours + " hour(s) ";
+			} else {
+				if ( minutes > 0 ) {
+					remaining += minutes + " minute(s) ";
+				}			
+			}
+			if ( days == 0 ) {
+				if ( minutes > 0 ) {
+					remaining += minutes + " minute(s) ";
+				}
+				if ( hours < 1 ) {
+					remaining += seconds + " second(s)";
+				}
+			}
+		} else {
+			remaining = "Bid Finished!";
+		}
+		
+		return remaining;
 	}
 }
