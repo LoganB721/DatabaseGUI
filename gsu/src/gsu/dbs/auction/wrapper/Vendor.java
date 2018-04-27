@@ -46,12 +46,16 @@ public class Vendor {
 		return totalSales;
 	}
 
+	/**
+	 * Get a list of all reviews for this vendor.
+	 * @return
+	 */
 	public Review[] getReviews() {
 		String SQL = "SELECT * FROM Customer_Review WHERE VendorID=" + this.vendorID;
 		try {
 			Connection c = DBConnect.getConnection();
 			ResultSet r = c.createStatement().executeQuery(SQL);
-
+	
 			ArrayList<Review> temp = new ArrayList<Review>();
 			while(r.next()) {
 				int cid = r.getInt(1);

@@ -142,7 +142,7 @@ public class AdminPanel extends Page{
 						+ " where AccessLevel >= 3");
 			}
 			if(selected.contains("Products")) {
-				build(grid, "select p.ProductID, p.ProductName, v.VendorName, p.StartingPrice,"
+				build(grid, "select p.ProductID, p.ProductName, v.VendorFirstName, v.VendorLastName, p.StartingPrice,"
 						+ " pt.ProductType, p.ProductDesc, s.Description, p.ImageURL "
 						+ "	from Products p left join Vendor v "
 						+ "	ON p.VendorID = v.VendorID"
@@ -280,24 +280,24 @@ public class AdminPanel extends Page{
 	}
 	
 	private void commandBox(GridPane grid) {
-        final Stage dialog = Launcher.popup();
-        StackPane pane = new StackPane();
-        pane.setPadding(new Insets(8,8,8,8));
-        Scene dialogScene = new Scene(pane, 500, 200);
-        dialog.setScene(dialogScene);
-        dialog.show();
-        
-        VBox dialogVbox = new VBox(4);
-        pane.getChildren().add(dialogVbox);
-        dialogVbox.getChildren().add(new Text("Type your command (INSERT/UPDATE/DELETE) below:"));
-        
-        TextArea text = new TextArea();
-        dialogVbox.getChildren().add(text);
-        
-        Button submit = new Button("Submit");
-        dialogVbox.getChildren().add(submit);
-        
-        submit.setOnAction(event -> {
+	    final Stage dialog = Launcher.popup();
+	    StackPane pane = new StackPane();
+	    pane.setPadding(new Insets(8,8,8,8));
+	    Scene dialogScene = new Scene(pane, 500, 200);
+	    dialog.setScene(dialogScene);
+	    dialog.show();
+	    
+	    VBox dialogVbox = new VBox(4);
+	    pane.getChildren().add(dialogVbox);
+	    dialogVbox.getChildren().add(new Text("Type your command (INSERT/UPDATE/DELETE) below:"));
+	    
+	    TextArea text = new TextArea();
+	    dialogVbox.getChildren().add(text);
+	    
+	    Button submit = new Button("Submit");
+	    dialogVbox.getChildren().add(submit);
+	    
+	    submit.setOnAction(event -> {
 	        	try {
 	        		Connection c = DBConnect.getConnection();
 	        		c.createStatement().execute(text.getText());
@@ -309,7 +309,7 @@ public class AdminPanel extends Page{
 	        	} catch(Exception e) {
 	        		Launcher.error(e.getMessage());
 	        	}
-        });
+	    });
 	}
 
 	private void build(GridPane grid, String string) {
@@ -326,7 +326,7 @@ public class AdminPanel extends Page{
 		data = FXCollections.observableArrayList();
 		tv = new TableView();
 		tv.setPrefWidth(Integer.MAX_VALUE);
-		
+	
 		try{
 			if ( query != null ) {
 				c = DBConnect.getConnection();
@@ -369,16 +369,16 @@ public class AdminPanel extends Page{
 	
 				}
 			}
-
+	
 			//Add to tableview
 			tv.setItems(data);
-
+	
 		}catch(Exception e){
 			Launcher.error(e.getMessage());
 			//e.printStackTrace();
 			//System.out.println("Whoops... Something happened.");             
 		}
-
+	
 	}
 
 }

@@ -49,6 +49,14 @@ public class BiddingItem {
 		return getItems(VendorID);
 	}
 	
+	/**
+	 * Return a list of items that are currently up for bid.
+	 * <br>
+	 * If a sellerID is set, it will return a list of items that are currently up for bid
+	 * that are also being sold by the specified seller.
+	 * @param sellerId
+	 * @return
+	 */
 	private static BiddingItem[] getItems(int sellerId) {
 		String append = "";
 		if ( sellerId != -1 ) {
@@ -78,6 +86,10 @@ public class BiddingItem {
 		return this.product;
 	}
 	
+	/**
+	 * Get a list of all bids made for this specific product.
+	 * @return
+	 */
 	public BidHistory[] getBidHistory() {
 		String SQL = "SELECT * FROM Bid_History WHERE BiddingItemID=" + this.getProduct().getProductID() + " ORDER BY BidPrice DESC";
 		try {
@@ -106,11 +118,12 @@ public class BiddingItem {
 		
 		return -1;
 	}
-	
-	public static void sellProduct(Product p, LocalDate endDate) {
-		
-	}
 
+	/**
+	 * Called when a client wishes to place a bid on an item.
+	 * @param item
+	 * @param bidPrice
+	 */
 	public static void bidOnItem(BiddingItem item, int bidPrice) {
 		Connection c;
 		try {
@@ -137,12 +150,12 @@ public class BiddingItem {
 				grid.setVgap(10);
 				grid.setPadding(new Insets(25, 25, 25, 25));
 				mvb.getChildren().add(grid);
-
+	
 				Label userName = new Label("First Name:");
 				grid.add(userName, 0, 1);
 				final TextField userTextField = new TextField();
 				grid.add(userTextField, 1, 1);
-
+	
 				Label pw = new Label("Last Name:");
 				grid.add(pw, 0, 2);
 				final TextField pwBox = new TextField();
@@ -189,6 +202,12 @@ public class BiddingItem {
 		}
 	}
 
+	/**
+	 * Return a bidding item from a product (if one exists).
+	 * @param product
+	 * @return
+	 * @throws SQLException
+	 */
 	public static BiddingItem getBiddingItem(Product product) throws SQLException {
 		String SQL = "SELECT * FROM Bidding_Items WHERE BiddingItemID = " + product.getProductID();
 		Connection c = DBConnect.getConnection();

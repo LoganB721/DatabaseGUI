@@ -63,6 +63,11 @@ public class Product {
 		this.productStatus = copy.getStatus();
 	}
 	
+	/**
+	 * Get a product object by its ID.
+	 * @param id
+	 * @return
+	 */
 	public static Product getProductFromID(int id) {
 		String SQL = "SELECT * FROM Products WHERE ProductID=" + id + ";";
 		try {
@@ -79,7 +84,17 @@ public class Product {
 		return null;
 	}
 	
-	public static void createProduct(Product p) throws SQLException {
+	/**
+	 * Create a product on the database from a dummy Product Object.
+	 * <br>
+	 * The Dummy Product Object does not yet contain an id.
+	 * <br>
+	 * Upon being added to the database, this dummy object is changed into
+	 * A proper wrapped product from the database.
+	 * @param p
+	 * @throws SQLException
+	 */
+	public static boolean createProduct(Product p) throws SQLException {
 		Connection c = DBConnect.getConnection();
 		PreparedStatement ss = c.prepareStatement("INSERT INTO Products(VendorID,ProductName,ImageURL,StartingPrice,ProductTypeID,ProductStatus,ProductDesc) VALUES(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 		ss.setInt(1, LoginInformation.getVendorID());
@@ -94,7 +109,9 @@ public class Product {
 		ResultSet r = ss.getGeneratedKeys();
 		if (r.next()){
 		    p.productID=r.getInt(1);
+		    return true;
 		}
+		return false;
 	}
 
 	public String getProductDescription() {
